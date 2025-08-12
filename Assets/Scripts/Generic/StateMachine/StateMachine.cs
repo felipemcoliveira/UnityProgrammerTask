@@ -73,9 +73,6 @@ namespace UnityProgrammerTask.Core
             return;
          }
 
-         if (!m_States.TryGetValue(newStateID, out IStateMachineState<T> newState))
-            throw new ArgumentException($"State {newStateID} not found in states.", nameof(newStateID));
-
          m_CurrentState?.OnExit();
 
          if (EnumEqualsFast(newStateID, m_HaltState))
@@ -83,6 +80,9 @@ namespace UnityProgrammerTask.Core
             m_CurrentState = null;
             return;
          }
+
+         if (!m_States.TryGetValue(newStateID, out IStateMachineState<T> newState))
+            throw new ArgumentException($"State {newStateID} not found in states.", nameof(newStateID));
 
          m_CurrentState = newState;
          m_CurrentState.OnEnter();

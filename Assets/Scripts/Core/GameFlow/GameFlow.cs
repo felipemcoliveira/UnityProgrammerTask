@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 namespace UnityProgrammerTask.Core
 {
    public class GameFlow : MonoBehaviour
@@ -9,8 +10,9 @@ namespace UnityProgrammerTask.Core
       [SerializeField]
       private GameContextID m_InitialGameContext;
 
-      [SerializeReference]
+      [SerializeReference, SubclassSelector]
       private GameContext[] m_GameContexts;
+
 
       private StateMachine<GameContextID> m_ContextStateMachine;
 
