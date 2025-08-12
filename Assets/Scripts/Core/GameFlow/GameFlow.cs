@@ -13,7 +13,6 @@ namespace UnityProgrammerTask.Core
       [SerializeReference, SubclassSelector]
       private GameContext[] m_GameContexts;
 
-
       private StateMachine<GameContextID> m_ContextStateMachine;
 
       private void Awake()
