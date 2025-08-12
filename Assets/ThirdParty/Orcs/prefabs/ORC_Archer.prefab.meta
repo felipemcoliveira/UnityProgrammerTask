@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d8c6f65c212cd2943997e75862b6699b
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 78906
+  packageName: Toon RTS Units - Orcs
+  packageVersion: 1.3.1
+  assetPath: Assets/Toon_RTS/Orcs/prefabs/ORC_Archer.prefab
+  uploadId: 429219

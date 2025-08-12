@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e7c55500953bcbd4399c816dc6ef9a9d
+timeCreated: 1506423313
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 78906
+  packageName: Toon RTS Units - Orcs
+  packageVersion: 1.3.1
+  assetPath: Assets/Toon_RTS/Orcs/models/Materials/color/ORC_Units_brown.mat
+  uploadId: 429219

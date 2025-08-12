@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2a7239c637571b34cba019eb22388c87
+timeCreated: 1506423350
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 78906
+  packageName: Toon RTS Units - Orcs
+  packageVersion: 1.3.1
+  assetPath: Assets/Toon_RTS/Orcs/models/Materials/color/ORC_Units_tan.mat
+  uploadId: 429219
