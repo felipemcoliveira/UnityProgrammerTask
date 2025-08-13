@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 
@@ -17,6 +18,8 @@ namespace UnityProgrammerTask.Core
 
       private void Awake()
       {
+         DOTween.Init();
+
          m_ContextStateMachine = new
          (
             m_GameContexts,
@@ -40,6 +43,8 @@ namespace UnityProgrammerTask.Core
 
       private void OnDestroy()
       {
+         MessageQueue.LogUnhandledMessages();
+
          if (m_ContextStateMachine != null)
          {
             m_ContextStateMachine.StateChanged -= OnContextSwitch;

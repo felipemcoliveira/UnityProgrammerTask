@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityProgrammerTask.Presentation;
 
 namespace UnityProgrammerTask.Core
 {
@@ -18,12 +19,6 @@ namespace UnityProgrammerTask.Core
 
       protected abstract Awaitable Startup();
 
-      public override void OnEnter()
-      {
-         m_State = State.WaitingStartup;
-         LoadingScreen.Show();
-      }
-
       public override GameContextID Update()
       {
          switch (m_State)
@@ -32,10 +27,7 @@ namespace UnityProgrammerTask.Core
                m_Startup ??= StartupInternal();
 
                if (m_Startup.IsCompleted)
-               {
                   m_State = State.Running;
-                  LoadingScreen.Hide();
-               }
 
                return StateID;
 
@@ -56,22 +48,40 @@ namespace UnityProgrammerTask.Core
 
       private async Awaitable StartupInternal()
       {
+         m_State = State.WaitingStartup;
+         LoadingScreen.Show();
+
          try
          {
+            float startTime = Time.realtimeSinceStartup;
+
+            while (LoadingScreen.IsFadingIn)
+            {
+               // Wait until the loading screen is fully faded in
+               await Awaitable.EndOfFrameAsync();
+            }
+
             await Startup();
+
+            const float fakeDelay = 1.5f;
+            if (Time.realtimeSinceStartup - startTime < fakeDelay)
+            {
+               // If startup is too fast, wait a bit to show the loading screen
+               await Awaitable.WaitForSecondsAsync(fakeDelay - (Time.realtimeSinceStartup - startTime));
+            }
          }
          catch (Exception e)
          {
             Debug.LogException(e);
-            throw;
+         }
+         finally
+         {
+            LoadingScreen.Hide();
          }
       }
 
       public override void OnExit()
       {
-         // guarantee that loading screen is hidden
-         LoadingScreen.Hide();
-
          m_Startup = null;
       }
 
@@ -98,17 +108,4 @@ namespace UnityProgrammerTask.Core
          await SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
       }
    }
-
-   public class LoadingScreen
-   {
-      public static void Show()
-      {
-
-      }
-
-      public static void Hide()
-      {
-      }
-   }
 }
-

@@ -25,7 +25,7 @@ namespace UnityProgrammerTask.Core
 
       protected override async Awaitable Startup()
       {
-         //AsyncOperation uiSceneLoadOp = SceneManager.LoadSceneAsync("GameplayUI", LoadSceneMode.Additive);
+         AsyncOperation uiSceneLoadOp = SceneManager.LoadSceneAsync("GameplayUI", LoadSceneMode.Additive);
 
          await SceneManager.LoadSceneAsync("FirstLevel", LoadSceneMode.Additive);
          Scene firstLevelScene = SceneManager.GetSceneByName("FirstLevel");
@@ -42,7 +42,7 @@ namespace UnityProgrammerTask.Core
             return;
          }
 
-         //await uiSceneLoadOp;
+         await uiSceneLoadOp;
       }
    }
 }

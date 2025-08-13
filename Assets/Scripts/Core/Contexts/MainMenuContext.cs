@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityProgrammerTask.Presentation;
 
 namespace UnityProgrammerTask.Core
 {
@@ -41,7 +42,12 @@ namespace UnityProgrammerTask.Core
 
       public override void OnExit()
       {
-         SceneManager.UnloadSceneAsync("MainMenu");
+         MainMenu mainMenu = UnityEngine.Object.FindFirstObjectByType<MainMenu>();
+
+         mainMenu.PlayCloseAnimation(() =>
+         {
+            SceneManager.UnloadSceneAsync("MainMenu");
+         });
       }
    }
 
