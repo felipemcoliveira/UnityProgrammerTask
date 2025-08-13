@@ -15,47 +15,47 @@ namespace UnityProgrammerTask.Core
       [SerializeField]
       private string m_AddressableName;
 
-      [SerializeField]
+      [SerializeField, HideInInspector]
       private GUID m_Id;
 
-      [SerializeField]
-      private bool m_IsPersistent;
+      [SerializeField, HideInInspector]
+      private bool m_IsSceneObject;
 
       [SerializeReference, SubclassSelector]
       private ISaveableComponentHandler[] m_SaveableComponentHandlers;
 
       private void Awake()
       {
-         if (SavedDynamicGameObjects.IsLoading && !m_IsPersistent)
-         {
+         if (!SavedDynamicGameObjects.IsLoading && !m_IsSceneObject)
             m_Id = SavedDynamicGameObjects.AddSaveableGameObject(this);
-            return;
-         }
-
-         SaveSystem.ActiveSave.RegisterSection(m_Id, this);
+         else
+            SaveSystem.ActiveSave.RegisterSection(m_Id, this);
 
          s_ActiveSaveableGameObjects.Add(m_Id, this);
       }
 
       private void OnDestroy()
       {
-         if (!m_IsPersistent)
+         if (!m_IsSceneObject)
             SavedDynamicGameObjects.RemoveSaveableGameObject(this);
+         else
+            SaveSystem.ActiveSave.UnregisterSection(m_Id);
 
-         SaveSystem.ActiveSave.UnregisterSection(m_Id);
 
          s_ActiveSaveableGameObjects.Remove(m_Id);
       }
 
       private void OnValidate()
       {
-         // check if is a scene object, if so, generate a persisit GUID
 #if UNITY_EDITOR
-         m_IsPersistent = UnityEditor.EditorUtility.IsPersistent(gameObject);
-         if (m_IsPersistent && m_Id == GUID.Empty)
+         // check if is a scene object, if so, generate a persisit GUID
+         m_IsSceneObject = UnityEditor.EditorUtility.IsPersistent(gameObject)
+            && gameObject.scene.IsValid() && gameObject.scene.isLoaded;
+
+         if (m_IsSceneObject && m_Id == GUID.Empty)
          {
             m_Id = GUID.Generate();
-            m_IsPersistent = true;
+            m_IsSceneObject = true;
          }
 #endif
       }
@@ -71,10 +71,14 @@ namespace UnityProgrammerTask.Core
 
       public void Load(BinaryReader stream, int size)
       {
+         foreach (ISaveableComponentHandler handler in m_SaveableComponentHandlers)
+            handler.Load(gameObject, stream);
       }
 
       public void Save(BinaryWriter stream)
       {
+         foreach (ISaveableComponentHandler handler in m_SaveableComponentHandlers)
+            handler.Save(gameObject, stream);
       }
 
       public void GetDependencies(List<GUID> dependencies)

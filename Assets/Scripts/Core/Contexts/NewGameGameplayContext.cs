@@ -1,40 +1,48 @@
-using System.IO;
+using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
+using UnityProgrammerTask.Gameplay;
 
 namespace UnityProgrammerTask.Core
 {
+   [Serializable]
    [GameContext(GameContextID.NewGameGameplay)]
    public class NewGameGameplayContext : GameplayContext
    {
-      private Awaitable m_Startup;
+      private static readonly Logger s_Logger = Logger.Create("NewGameGameplay", "#62FF8E");
+
+      [SerializeField]
+      private AssetReferenceGameObject m_CharacterPrefabAssetReference;
 
       public override void OnEnter()
       {
+         base.OnEnter();
+
          SaveSystem.StartNewSave();
       }
 
-      public override GameContextID Update()
+      protected override async Awaitable Startup()
       {
-         if (m_Startup == null)
-            m_Startup = Startup();
+         //AsyncOperation uiSceneLoadOp = SceneManager.LoadSceneAsync("GameplayUI", LoadSceneMode.Additive);
 
-         // Await until startup is completed.
-         if (!m_Startup.IsCompleted)
-            return StateID;
+         await SceneManager.LoadSceneAsync("FirstLevel", LoadSceneMode.Additive);
+         Scene firstLevelScene = SceneManager.GetSceneByName("FirstLevel");
 
-         HandleSaveGameMessage();
-         return StateID;
-      }
+         SceneManager.SetActiveScene(firstLevelScene);
 
-      public int Write(BinaryWriter stream)
-      {
-         return 0;
-      }
+         // Load the character prefab from the asset reference
+         AsyncOperationHandle<GameObject> instantiateOp = m_CharacterPrefabAssetReference.InstantiateAsync();
+         GameObject characterGameObject = await instantiateOp.Task;
 
-      private async Awaitable Startup()
-      {
-         await SceneManager.LoadSceneAsync("GameLevel", LoadSceneMode.Additive);
+         if (!characterGameObject.TryGetComponent(out Character character))
+         {
+            s_Logger.LogFormatError("Character component not found on the instantiated GameObject.");
+            return;
+         }
+
+         //await uiSceneLoadOp;
       }
    }
 }

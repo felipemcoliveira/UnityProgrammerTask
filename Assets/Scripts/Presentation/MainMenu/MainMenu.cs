@@ -9,6 +9,11 @@ namespace UnityProgrammerTask.Presentation
          MessageQueue.Post<StartNewGameMessage>();
       }
 
+      public void HandleLoadGame()
+      {
+         MessageQueue.Post<LoadGameMessage>();
+      }
+
       public void HandleQuitGame()
       {
          MessageQueue.Post<QuitGameMessage>();

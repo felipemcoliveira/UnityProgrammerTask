@@ -26,12 +26,12 @@ namespace UnityProgrammerTask
 
       private List<SectionHeader> m_SectionHeaders = new();
 
-      public GameSave()
+      public void Initialize()
       {
          RegisterGlobalSections();
       }
 
-      public GameSave(FileStream fileStream)
+      public void Initialize(FileStream fileStream)
       {
          m_FileStream = fileStream;
          m_Reader = new BinaryReader(fileStream);
@@ -115,7 +115,8 @@ namespace UnityProgrammerTask
 
             int size = checked((int)(writer.BaseStream.Position - dataPos));
 
-            long headerBase = headerStart + i * GUID.kSizeInBytes;
+            //                                   guid + size + position
+            long headerBase = headerStart + i * (GUID.kSizeInBytes + 4 + 4);
             long sizeAndPosOffset = headerBase + GUID.kSizeInBytes;
 
             // patch size and position
@@ -190,13 +191,6 @@ namespace UnityProgrammerTask
          }
       }
 
-      private enum VisitState : byte
-      {
-         NotVisited,
-         Visiting,
-         Visited
-      }
-
       // TODO: document this method
       public void SortSectionIDs(List<GUID> sectionIds)
       {
@@ -216,6 +210,12 @@ namespace UnityProgrammerTask
 
             return indexA.CompareTo(indexB);
          });
+      }
+
+      private enum VisitState : byte
+      {
+         Visiting,
+         Visited
       }
 
       private static List<GUID> TopologicalOrder(Dictionary<GUID, IGameSaveSection> sections)

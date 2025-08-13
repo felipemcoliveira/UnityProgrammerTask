@@ -24,6 +24,9 @@ namespace UnityProgrammerTask.Core
          if (MessageQueue.TryPoll<StartNewGameMessage>())
             return GameContextID.NewGameGameplay;
 
+         if (MessageQueue.TryPoll<LoadGameMessage>())
+            return GameContextID.LoadedGameGameplay;
+
          if (MessageQueue.TryPoll<QuitGameMessage>())
             return GameContextID.None;
 

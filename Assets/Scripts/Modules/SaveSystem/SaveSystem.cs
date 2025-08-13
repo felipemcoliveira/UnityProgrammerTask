@@ -10,12 +10,15 @@ namespace UnityProgrammerTask
       public static void StartNewSave()
       {
          ActiveSave = new GameSave();
+         ActiveSave.Initialize();
       }
 
       public static void LoadSave(string filePath)
       {
+         ActiveSave = new GameSave();
+
          FileStream file = File.OpenRead(filePath);
-         ActiveSave = new GameSave(file);
+         ActiveSave.Initialize(file);
       }
 
       public static void Save(string filePath)

@@ -10,7 +10,15 @@ namespace UnityProgrammerTask.Core
       {
          int sceneCount = size / UnsafeUtility.SizeOf<int>();
          for (int i = 0; i < sceneCount; i++)
-            SceneManager.LoadScene(stream.ReadInt32());
+         {
+            int sceneBuildIndex = stream.ReadInt32();
+            Scene scene = SceneManager.GetSceneByBuildIndex(sceneBuildIndex);
+
+            if (scene.isLoaded)
+               continue;
+
+            SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Additive);
+         }
       }
 
       public void Save(BinaryWriter stream)

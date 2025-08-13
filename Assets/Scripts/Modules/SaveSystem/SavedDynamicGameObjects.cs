@@ -20,16 +20,21 @@ namespace UnityProgrammerTask.Core
       {
          Assert.IsNotNull(saveable, "SaveableGameObject cannot be null.");
 
-         GUID guid = GUID.Generate();
-         s_SaveableGameObjects.Add(guid, saveable);
-         s_SaveableGameObjectGUIDs.Add(saveable, guid);
+         GUID id = GUID.Generate();
+         s_SaveableGameObjects.Add(id, saveable);
+         s_SaveableGameObjectGUIDs.Add(saveable, id);
 
-         return guid;
+         SaveSystem.ActiveSave.RegisterSection(id, saveable);
+
+         return id;
       }
 
       public static void RemoveSaveableGameObject(SaveableGameObject saveable)
       {
-         Assert.IsNotNull(saveable, "SaveableGameObject cannot be null.");
+         if (saveable == null)
+            return;
+
+         Assert.IsFalse(string.IsNullOrEmpty(saveable.AddressableName), "SaveableGameObject AddressableName cannot be null or empty.");
 
          if (!s_SaveableGameObjectGUIDs.TryGetValue(saveable, out GUID guid))
             Debug.LogWarning($"SaveableGameObject {saveable.name} not found in the saved dynamic game objects.");
@@ -56,6 +61,7 @@ namespace UnityProgrammerTask.Core
          }
 
          int count = stream.ReadInt32();
+
          for (int i = 0; i < count; i++)
          {
             GUID saveGameObjectSectionId = GUID.Read(stream);
@@ -64,7 +70,7 @@ namespace UnityProgrammerTask.Core
 
             string addressableName = addressablesTable[addressableIndex];
 
-            GameObject go = Addressables.LoadAssetAsync<GameObject>(addressableName).WaitForCompletion();
+            GameObject go = Addressables.InstantiateAsync(addressableName).WaitForCompletion();
             SaveableGameObject saveable = go.GetComponent<SaveableGameObject>();
 
             Scene scene = SceneManager.GetSceneByBuildIndex(sceneBuildIndex);
@@ -72,9 +78,11 @@ namespace UnityProgrammerTask.Core
                SceneManager.MoveGameObjectToScene(go, scene);
 
             s_SaveableGameObjects.Add(saveGameObjectSectionId, saveable);
+            s_SaveableGameObjectGUIDs.Add(saveable, saveGameObjectSectionId);
 
             SaveSystem.ActiveSave.RegisterSection(saveGameObjectSectionId, saveable);
          }
+
 
          IsLoading = false;
       }
@@ -98,15 +106,18 @@ namespace UnityProgrammerTask.Core
             int byteCount = Encoding.UTF8.GetByteCount(addressableName);
             Span<byte> bytes = stackalloc byte[byteCount];
 
+            Encoding.UTF8.GetBytes(addressableName, bytes);
+
             stream.Write((short)byteCount);
             stream.Write(bytes);
-            stream.Write(addressableName);
          }
 
          List<GUID> saveableIds = new(s_SaveableGameObjects.Keys);
 
          // sort the IDs to ensure that dependencies are handled correctly
          SaveSystem.ActiveSave.SortSectionIDs(saveableIds);
+
+         stream.Write(saveableIds.Count);
 
          foreach (GUID guid in saveableIds)
          {
@@ -120,7 +131,6 @@ namespace UnityProgrammerTask.Core
 
             guid.Write(stream);
             stream.Write(addressableIndex);
-            stream.Write(saveable.AddressableName);
             stream.Write((short)sceneBuildIndex);
          }
       }

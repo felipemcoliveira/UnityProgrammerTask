@@ -13,11 +13,17 @@ namespace UnityProgrammerTask.Core
       PositionX = 1 << 1,
       PositionY = 1 << 2,
       PositionZ = 1 << 3,
+
+      Position = PositionX | PositionY | PositionZ,
+
       RotationX = 1 << 4,
       RotationY = 1 << 5,
       RotationZ = 1 << 6,
+
+      Rotation = RotationX | RotationY | RotationZ,
    }
 
+   [Serializable]
    public class SaveableTransformHandler : ISaveableComponentHandler
    {
       [SerializeField]
