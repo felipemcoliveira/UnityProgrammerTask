@@ -82,6 +82,8 @@ namespace UnityProgrammerTask.Core
 
       public override void OnExit()
       {
+         SaveSystem.DisposeActiveSave();
+
          m_Startup = null;
       }
 

@@ -34,5 +34,11 @@ namespace UnityProgrammerTask
 
          ActiveSave.Write(writer);
       }
+
+      public static void DisposeActiveSave()
+      {
+         ActiveSave?.Dispose();
+         ActiveSave = null;
+      }
    }
 }
