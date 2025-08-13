@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using UnityProgrammerTask.Core;
 
 namespace UnityProgrammerTask
@@ -133,20 +132,6 @@ namespace UnityProgrammerTask
                PositionInFile = dataPos
             });
          }
-      }
-
-      private static void WriteFixedString(BinaryWriter w, string id, int sizeInBytes)
-      {
-         Span<byte> buffer = stackalloc byte[sizeInBytes];
-         Encoding.UTF8.GetBytes(id, buffer);
-         w.Write(buffer);
-      }
-
-      private static string ReadFixedString(BinaryReader r, int sizeInBytes)
-      {
-         Span<byte> buffer = stackalloc byte[sizeInBytes];
-         int realSizeInBytes = r.Read(buffer);
-         return Encoding.UTF8.GetString(buffer.Slice(0, realSizeInBytes));
       }
 
       public void Dispose()
