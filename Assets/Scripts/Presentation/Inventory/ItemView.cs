@@ -120,10 +120,10 @@ namespace UnityProgrammerTask.Presentation
 
       public void OnPointerClick(PointerEventData eventData)
       {
-         if (eventData.button == PointerEventData.InputButton.Right && eventData.clickCount == 2)
+         if (eventData.button == PointerEventData.InputButton.Left && eventData.clickCount == 2)
          {
-            if (m_Item.ItemDefinition.IsConsumable)
-               m_Item.Inventory.ConsumeItem(m_Item.Position);
+            if (m_Item.Inventory.ConsumeItem(m_Item.Position))
+               Toast.Instance.ShowMessage($"Consumed one {m_Item.ItemDefinition.ItemName}.");
          }
       }
    }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace UnityProgrammerTask.Presentation
@@ -27,6 +28,10 @@ namespace UnityProgrammerTask.Presentation
       public void HandleSaveGame()
       {
          MessageQueue.Post<SaveGameMessage>();
+         Toast.Instance.ShowMessage("Game saved successfully.");
+
+         // avoid selecting the save button
+         EventSystem.current.SetSelectedGameObject(null);
       }
 
       public void HandleReturnMainMenu()

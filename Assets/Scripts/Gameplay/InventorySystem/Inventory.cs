@@ -226,6 +226,9 @@ namespace UnityProgrammerTask.Gameplay
          if (!slot.Item.TryConsume(Character, ref slot.Quantity))
             return false;
 
+         if (slot.Quantity == 0)
+            slot.Item = null;
+
          Assert.IsFalse(slot.Quantity >= originalQuantity, "Item consumption should reduce quantity.");
 
          BroadcastChanged();
