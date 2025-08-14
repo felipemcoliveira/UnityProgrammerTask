@@ -11,8 +11,6 @@ namespace UnityProgrammerTask.Core
    [GameContext(GameContextID.NewGameGameplay)]
    public class NewGameGameplayContext : GameplayContext
    {
-      private static readonly Logger s_Logger = Logger.Create("NewGameGameplay", "#62FF8E");
-
       [SerializeField]
       private AssetReferenceGameObject m_CharacterPrefabAssetReference;
 
@@ -45,7 +43,7 @@ namespace UnityProgrammerTask.Core
 
          if (!characterGameObject.TryGetComponent(out Character character))
          {
-            s_Logger.LogFormatError("Character component not found on the instantiated GameObject.");
+            Debug.LogError("Character component not found on the instantiated GameObject.");
             return;
          }
 

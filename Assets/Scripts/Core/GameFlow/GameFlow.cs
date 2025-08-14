@@ -6,8 +6,6 @@ namespace UnityProgrammerTask.Core
 {
    public class GameFlow : MonoBehaviour
    {
-      private static readonly Logger s_Logger = Logger.Create("GameFlow", "#8954FB");
-
       [SerializeField]
       private GameContextID m_InitialGameContext;
 
@@ -36,7 +34,7 @@ namespace UnityProgrammerTask.Core
 
          if (!m_ContextStateMachine.IsRunning)
          {
-            s_Logger.Log(LogType.Log, "Game flow has stopped running.", this);
+            Debug.Log("Game flow has stopped running.", this);
             Destroy(gameObject);
          }
       }
@@ -56,12 +54,12 @@ namespace UnityProgrammerTask.Core
 
       private void OnContextSwitch(GameContextID newContextID)
       {
-         s_Logger.Log(LogType.Log, $"Switched to context: {newContextID}", this);
+         Debug.Log($"Switched to context: {newContextID}", this);
       }
 
       private void QuitApplication()
       {
-         s_Logger.Log(LogType.Log, "Quitting application.", this);
+         Debug.Log("Quitting application.", this);
 
 #if UNITY_EDITOR
          UnityEditor.EditorApplication.isPlaying = false;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace UnityProgrammerTask
@@ -9,8 +10,6 @@ namespace UnityProgrammerTask
    /// </summary>
    public class MessageQueue
    {
-      private static readonly Logger s_Logger = Logger.Create(nameof(MessageQueue), "#deaf37");
-
       private static readonly List<Message> s_MessageQueue = new();
 
       public static bool IsInQueue(Message messafge)
@@ -30,7 +29,7 @@ namespace UnityProgrammerTask
       {
          Assert.IsNotNull(message, "Message cannot be null");
 
-         s_Logger.LogFormatInfo("Enqueue {0}", message.ToString());
+         Debug.LogFormat("Enqueue {0}", message.ToString());
 
          s_MessageQueue.Add(message);
       }
@@ -46,7 +45,7 @@ namespace UnityProgrammerTask
          {
             if (s_MessageQueue[i] is T message1)
             {
-               s_Logger.LogFormatInfo("Poll    {0}", message1.ToString());
+               Debug.LogFormat("Poll    {0}", message1.ToString());
 
                s_MessageQueue.RemoveAt(i);
                message = message1;
@@ -63,10 +62,10 @@ namespace UnityProgrammerTask
          if (s_MessageQueue.Count == 0)
             return;
 
-         s_Logger.LogFormatWarning("Unhandled messages in the queue:");
+         Debug.LogWarning("Unhandled messages in the queue:");
 
          foreach (Message message in s_MessageQueue)
-            s_Logger.LogFormatWarning(message.ToString());
+            Debug.LogWarning(message.ToString());
       }
    }
 }
