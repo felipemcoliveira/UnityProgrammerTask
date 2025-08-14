@@ -5,7 +5,7 @@ namespace UnityProgrammerTask.Gameplay
    [CreateAssetMenu(fileName = "HealingPotion", menuName = "Game/Items/Healing Potion")]
    public class HealingPotion : Item
    {
-      public override bool IsConsumible => true;
+      public override bool IsConsumable => true;
 
       [SerializeField]
       private int m_HealAmount = 10;

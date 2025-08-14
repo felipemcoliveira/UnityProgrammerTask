@@ -6,7 +6,7 @@ namespace UnityProgrammerTask.Gameplay
    {
       public GUID ID => m_ID;
 
-      public virtual bool IsConsumible => false;
+      public virtual bool IsConsumable => false;
 
       public int MaxStackSize => m_MaxStackSize;
 

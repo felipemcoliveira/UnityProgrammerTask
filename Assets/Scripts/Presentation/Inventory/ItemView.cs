@@ -12,7 +12,7 @@ namespace UnityProgrammerTask.Presentation
       public void OnItemDropped(ItemInInventory item);
    }
 
-   public class ItemView : UIBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+   public class ItemView : UIBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
    {
       [SerializeField]
       private Image m_IconImage;
@@ -116,6 +116,15 @@ namespace UnityProgrammerTask.Presentation
          }
 
          dropHandler?.OnItemDropped(m_Item);
+      }
+
+      public void OnPointerClick(PointerEventData eventData)
+      {
+         if (eventData.button == PointerEventData.InputButton.Right && eventData.clickCount == 2)
+         {
+            if (m_Item.ItemDefinition.IsConsumable)
+               m_Item.Inventory.ConsumeItem(m_Item.Position);
+         }
       }
    }
 }

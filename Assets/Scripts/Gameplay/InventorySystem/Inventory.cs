@@ -219,7 +219,7 @@ namespace UnityProgrammerTask.Gameplay
          if (slot.Item == null)
             return false;
 
-         if (!slot.Item.IsConsumible)
+         if (!slot.Item.IsConsumable)
             return false;
 
          int originalQuantity = slot.Quantity;
