@@ -146,17 +146,20 @@ namespace UnityProgrammerTask
             return;
 
          if (disposing)
-         {
-            m_Reader?.Dispose();
-            m_Reader = null;
-
-            m_FileStream?.Dispose();
-            m_FileStream = null;
-         }
+            FreeFile();
 
          m_Sections.Clear();
          m_SectionHeaders.Clear();
          m_Disposed = true;
+      }
+
+      public void FreeFile()
+      {
+         m_Reader?.Dispose();
+         m_Reader = null;
+
+         m_FileStream?.Dispose();
+         m_FileStream = null;
       }
 
       private void ReadSectionHeaders(BinaryReader stream)

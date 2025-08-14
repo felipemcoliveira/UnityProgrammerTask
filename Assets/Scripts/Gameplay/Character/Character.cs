@@ -6,6 +6,8 @@ namespace UnityProgrammerTask.Gameplay
 {
    public class Character : MonoBehaviour
    {
+      public static Action<Character> PlayerCharacterSet;
+
       public event Action<Character> CharacterDied;
 
       public static Character PlayerCharacter { get; private set; }
@@ -50,14 +52,9 @@ namespace UnityProgrammerTask.Gameplay
          Assert.IsNull(PlayerCharacter, "Player character is already set.");
 
          PlayerCharacter = this;
-      }
+         PlayerCharacterSet?.Invoke(this);
 
-      private void Update()
-      {
-         if (Input.GetKeyDown(KeyCode.Escape))
-         {
-            MessageQueue.Post(new SaveGameMessage());
-         }
+         Debug.Log($"Character {name} set as player character.");
       }
    }
 }

@@ -1682,6 +1682,8 @@ MonoBehaviour:
   m_IsSceneObject: 0
   m_SaveableComponentHandlers:
   - rid: 7631415846620102724
+  - rid: 7631415857419911241
+  - rid: 7631415857419911242
   references:
     version: 2
     RefIds:
@@ -1691,6 +1693,12 @@ MonoBehaviour:
         m_SaveFlags: 95
         m_PositionSpace: 0
         m_RotationSpace: 0
+    - rid: 7631415857419911241
+      type: {class: SaveableInventoryHandler, ns: UnityProgrammerTask.Core, asm: Assembly-CSharp}
+      data: 
+    - rid: 7631415857419911242
+      type: {class: SaveablePlayerCharacterHandler, ns: UnityProgrammerTask.Core, asm: Assembly-CSharp}
+      data: 
 --- !u!114 &6952459697863594694
 MonoBehaviour:
   m_ObjectHideFlags: 0

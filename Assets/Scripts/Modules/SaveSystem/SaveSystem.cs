@@ -29,6 +29,8 @@ namespace UnityProgrammerTask
          if (string.IsNullOrEmpty(filePath))
             throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
 
+         ActiveSave.FreeFile();
+
          using FileStream file = File.Create(filePath);
          using BinaryWriter writer = new(file);
 

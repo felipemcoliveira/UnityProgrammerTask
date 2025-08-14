@@ -38,14 +38,25 @@ namespace UnityProgrammerTask.Presentation
 
       protected override void OnEnable()
       {
-         if (m_Initialized || Character.PlayerCharacter == null)
+         if (Character.PlayerCharacter == null)
+         {
+            Character.PlayerCharacterSet += OnPlayerCharacterSet;
             return;
+         }
 
          Initialize(Character.PlayerCharacter.Inventory);
       }
 
+      private void OnPlayerCharacterSet(Character character)
+      {
+         Initialize(character.Inventory);
+      }
+
       private void Initialize(Inventory inventory)
       {
+         if (m_Initialized)
+            return;
+
          InstantiateSlots(inventory);
          RefreshItems(inventory);
 
@@ -80,6 +91,14 @@ namespace UnityProgrammerTask.Presentation
 
       private void InstantiateSlots(Inventory inventory)
       {
+         foreach (ItemSlot slot in m_Slots.Values)
+         {
+            if (slot != null)
+               Destroy(slot.gameObject);
+         }
+
+         m_Slots.Clear();
+
          for (int x = 0; x < inventory.InventoryCapacity.x; x++)
          {
             for (int y = 0; y < inventory.InventoryCapacity.y; y++)
