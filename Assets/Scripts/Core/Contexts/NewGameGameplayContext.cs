@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -15,13 +16,7 @@ namespace UnityProgrammerTask.Core
       private AssetReferenceGameObject m_CharacterPrefabAssetReference;
 
       [SerializeField]
-      private Item m_HealPotionItem;
-
-      [SerializeField]
-      private Item m_PoisonItem;
-
-      [SerializeField]
-      private Equipment m_Equipment;
+      private int m_SpawnItemCount = 10;
 
       public override void OnEnter()
       {
@@ -49,14 +44,31 @@ namespace UnityProgrammerTask.Core
 
          character.SetAsPlayerCharacter();
 
-         character.Inventory.AddItem(m_PoisonItem, 10);
-         character.Inventory.AddItem(m_HealPotionItem, 20);
-         character.Inventory.AddItem(m_Equipment, 1);
-
-         CharacterEquipment characterEquipment = character.GetComponent<CharacterEquipment>();
-         characterEquipment.Equip(m_Equipment);
+         // I don't like this approach, but time is getting short.
+         GameObject itemSpawnPointsContainer = GameObject.Find("ItemSpawnPoints");
+         SpawnItems(itemSpawnPointsContainer);
 
          await LoadGameplayScene("GameplayUI");
+      }
+
+      private void SpawnItems(GameObject itemSpawnPointsContainer)
+      {
+         List<Vector3> spawnPosition = new();
+         foreach (Transform child in itemSpawnPointsContainer.transform)
+            spawnPosition.Add(child.position);
+
+         for (int i = 0; i < m_SpawnItemCount; i++)
+         {
+            int randomIndex = UnityEngine.Random.Range(0, spawnPosition.Count);
+            Vector3 position = spawnPosition[randomIndex];
+            spawnPosition.RemoveAt(randomIndex);
+
+            int randomItemIndex = UnityEngine.Random.Range(0, ItemLibrary.Instance.Count);
+            Item item = ItemLibrary.Instance[randomItemIndex];
+
+            int quantity = UnityEngine.Random.Range(1, item.MaxStackSize + 1);
+            item.CreateWorldRepresentation(position, quantity);
+         }
       }
    }
 }

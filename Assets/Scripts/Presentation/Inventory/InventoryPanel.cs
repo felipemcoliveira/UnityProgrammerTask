@@ -36,6 +36,11 @@ namespace UnityProgrammerTask.Presentation
          m_ToggleVisibilityAction.performed += OnToggleVisibility;
       }
 
+      protected override void OnDestroy()
+      {
+         m_ToggleVisibilityAction.performed -= OnToggleVisibility;
+      }
+
       protected override void OnEnable()
       {
          if (Character.PlayerCharacter == null)

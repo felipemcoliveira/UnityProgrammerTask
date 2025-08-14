@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -5,7 +6,7 @@ using UnityEngine.AddressableAssets;
 namespace UnityProgrammerTask.Gameplay
 {
    [CreateAssetMenu]
-   public class ItemLibrary : ScriptableObject
+   public class ItemLibrary : ScriptableObject, IReadOnlyList<Item>
    {
       public static ItemLibrary Instance
       {
@@ -19,6 +20,10 @@ namespace UnityProgrammerTask.Gameplay
             return s_Instance;
          }
       }
+
+      public int Count => m_ItemDefinitions.Count;
+
+      public Item this[int index] => m_ItemDefinitions[index];
 
       private static ItemLibrary s_Instance;
 
@@ -60,6 +65,16 @@ namespace UnityProgrammerTask.Gameplay
 
             m_ItemLookup[item.ID] = item;
          }
+      }
+
+      public IEnumerator<Item> GetEnumerator()
+      {
+         return m_ItemDefinitions.GetEnumerator();
+      }
+
+      IEnumerator IEnumerable.GetEnumerator()
+      {
+         return GetEnumerator();
       }
    }
 }

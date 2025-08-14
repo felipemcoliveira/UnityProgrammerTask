@@ -31,6 +31,11 @@ namespace UnityProgrammerTask.Presentation
          m_ToggleVisibilityAction.performed += OnToggleVisibility;
       }
 
+      protected override void OnDestroy()
+      {
+         m_ToggleVisibilityAction.performed -= OnToggleVisibility;
+      }
+
       protected override void OnEnable()
       {
          if (Character.PlayerCharacter == null)
@@ -45,7 +50,7 @@ namespace UnityProgrammerTask.Presentation
 
       private void OnPlayerCharacterSet(Character character)
       {
-         CharacterEquipment characterEquipment = character.GetComponent<CharacterEquipment>();
+         m_CharacterEquipment = character.GetComponent<CharacterEquipment>();
          RefreshItems();
       }
 
@@ -66,6 +71,9 @@ namespace UnityProgrammerTask.Presentation
 
       private void RefreshItems()
       {
+         if (m_CharacterEquipment == null)
+            return;
+
          foreach (EquipmentView equipmentView in m_EquipmentViews)
             Destroy(equipmentView.gameObject);
 
