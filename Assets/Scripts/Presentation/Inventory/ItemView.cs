@@ -52,6 +52,16 @@ namespace UnityProgrammerTask.Presentation
             m_CanvasGroup = gameObject.AddComponent<CanvasGroup>();
       }
 
+
+      protected override void OnDestroy()
+      {
+         if (m_ItemDetails != null)
+         {
+            m_ItemDetails.HideAndDestroy();
+            m_ItemDetails = null;
+         }
+      }
+
       public void SetCanvas(Canvas canvas)
       {
          m_Canvas = canvas;

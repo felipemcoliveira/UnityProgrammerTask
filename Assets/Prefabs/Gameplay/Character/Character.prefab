@@ -1687,7 +1687,8 @@ MonoBehaviour:
   - rid: 7631415846620102724
   - rid: 7631415857419911241
   - rid: 7631415857419911242
-  - rid: 7631415860000456776
+  - rid: 7631415869522051155
+  - rid: 7631415869522051156
   references:
     version: 2
     RefIds:
@@ -1703,8 +1704,11 @@ MonoBehaviour:
     - rid: 7631415857419911242
       type: {class: SaveablePlayerCharacterHandler, ns: UnityProgrammerTask.Core, asm: Assembly-CSharp}
       data: 
-    - rid: 7631415860000456776
+    - rid: 7631415869522051155
       type: {class: SaveableCharacterEquipmentHandler, ns: UnityProgrammerTask.Core, asm: Assembly-CSharp}
+      data: 
+    - rid: 7631415869522051156
+      type: {class: SaveableCharacterStatsHandler, ns: UnityProgrammerTask.Core, asm: Assembly-CSharp}
       data: 
 --- !u!114 &6952459697863594694
 MonoBehaviour:

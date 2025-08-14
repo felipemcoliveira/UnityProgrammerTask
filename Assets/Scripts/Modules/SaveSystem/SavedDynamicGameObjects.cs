@@ -44,6 +44,9 @@ namespace UnityProgrammerTask.Core
 
          s_SaveableGameObjects.Remove(guid);
          s_SaveableGameObjectGUIDs.Remove(saveable);
+
+         if (SaveSystem.ActiveSave != null)
+            SaveSystem.ActiveSave.UnregisterSection(guid);
       }
 
       public void Load(BinaryReader stream, int size)

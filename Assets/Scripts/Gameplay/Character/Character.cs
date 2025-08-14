@@ -24,7 +24,7 @@ namespace UnityProgrammerTask.Gameplay
          }
       }
 
-      private float Health { get; set; } = 100f;
+      public float Health { get; private set; } = 100f;
 
       public bool IsMaxHealth => Health >= m_MaxHealth;
 
@@ -59,6 +59,9 @@ namespace UnityProgrammerTask.Gameplay
 
       public void TakeDamage(float damage)
       {
+         if (!IsAlive)
+            return;
+
          Assert.IsTrue(damage > 0, "Damage must be greater than zero.");
 
          Health -= damage;
@@ -70,6 +73,9 @@ namespace UnityProgrammerTask.Gameplay
 
       public void Heal(float amount)
       {
+         if (!IsAlive)
+            return;
+
          Assert.IsTrue(amount > 0, "Heal amount must be greater than zero.");
          Health += Mathf.Min(amount, m_MaxHealth - Health);
       }
@@ -105,6 +111,14 @@ namespace UnityProgrammerTask.Gameplay
       private void UpdateMovementSpeed()
       {
          m_NavMeshAgent.speed = m_MovementSpeedBase * (1 + m_MovementSpeedBonus / 100f);
+      }
+
+      /// <summary>
+      /// This method should only be used by the save system.
+      /// </summary>
+      public void SetHealth(float health)
+      {
+         Health = Mathf.Min(health, m_MaxHealth);
       }
    }
 }

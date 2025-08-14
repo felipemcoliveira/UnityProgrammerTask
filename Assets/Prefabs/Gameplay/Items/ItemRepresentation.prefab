@@ -58,6 +58,7 @@ MonoBehaviour:
   m_IsSceneObject: 0
   m_SaveableComponentHandlers:
   - rid: 7631415857419911239
+  - rid: 7631415869522051157
   references:
     version: 2
     RefIds:
@@ -67,6 +68,9 @@ MonoBehaviour:
         m_SaveFlags: 14
         m_PositionSpace: 0
         m_RotationSpace: 1
+    - rid: 7631415869522051157
+      type: {class: SaveableItemRepresentationHandler, ns: UnityProgrammerTask.Core, asm: Assembly-CSharp}
+      data: 
 --- !u!114 &9056903113619243584
 MonoBehaviour:
   m_ObjectHideFlags: 0

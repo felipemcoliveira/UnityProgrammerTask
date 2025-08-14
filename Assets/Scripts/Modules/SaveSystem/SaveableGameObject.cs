@@ -31,7 +31,7 @@ namespace UnityProgrammerTask.Core
          else
             SaveSystem.ActiveSave.RegisterSection(m_Id, this);
 
-         s_ActiveSaveableGameObjects.Add(m_Id, this);
+         s_ActiveSaveableGameObjects[m_Id] = this;
       }
 
       private void OnDestroy()
