@@ -1,3 +1,5 @@
+using DG.Tweening;
+using EPOOutline;
 using UnityEngine;
 
 namespace UnityProgrammerTask.Gameplay
@@ -9,6 +11,19 @@ namespace UnityProgrammerTask.Gameplay
 
       private Item m_Item;
       private int m_Quantity;
+
+
+      private void Awake()
+      {
+         Outlinable outlinable = GetComponent<Outlinable>();
+
+         Color originalColor = outlinable.OutlineParameters.Color;
+         outlinable.OutlineParameters.Color = originalColor * 0.5f;
+
+         outlinable.OutlineParameters.DOColor(originalColor, 1)
+            .SetEase(Ease.InOutSine)
+            .SetLoops(-1, LoopType.Yoyo);
+      }
 
       public void Initialize(Item item, int quantity)
       {

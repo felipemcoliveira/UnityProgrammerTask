@@ -24,6 +24,9 @@ namespace UnityProgrammerTask.Presentation
       [SerializeField]
       private float m_AnimationDuration = 0.2f;
 
+      [SerializeField]
+      private bool m_InitiallyVisible = false;
+
       private RectTransform m_RectTransform;
       private AnimatingState m_AnimatingState = AnimatingState.None;
 
@@ -34,6 +37,9 @@ namespace UnityProgrammerTask.Presentation
          m_RectTransform.anchoredPosition = new Vector2(-m_AnchoredPositionXOffset, m_RectTransform.anchoredPosition.y);
 
          gameObject.SetActive(false);
+
+         if (m_InitiallyVisible)
+            StartOpenAnimation();
       }
 
       public void ToggleVisibility()

@@ -24,11 +24,11 @@ MonoBehaviour:
   m_WorldRepresentationPrefab: {fileID: 9056903113619243584, guid: 2baf6513148a66545a4d1e0e00451139, type: 3}
   m_Slot: 2
   m_Effects:
-  - rid: 7631415860000456775
+  - rid: 7631415869522051154
   references:
     version: 2
     RefIds:
-    - rid: 7631415860000456775
-      type: {class: LogOnlyEffect, ns: UnityProgrammerTask.Gameplay, asm: Assembly-CSharp}
+    - rid: 7631415869522051154
+      type: {class: MovementSpeedEffect, ns: UnityProgrammerTask.Gameplay, asm: Assembly-CSharp}
       data:
-        m_Message: Movement Speed
+        m_BonusPercentage: 30

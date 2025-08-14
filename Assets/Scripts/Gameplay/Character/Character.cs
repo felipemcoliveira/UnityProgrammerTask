@@ -33,6 +33,11 @@ namespace UnityProgrammerTask.Gameplay
       private static readonly int k_IsAliveHash = Animator.StringToHash("IsAlive");
       private static readonly int k_MovementSpeedHash = Animator.StringToHash("MovementSpeed");
 
+      /// <summary>
+      /// Movement speed bonus in percentage.
+      /// </summary>
+      private float m_MovementSpeedBase;
+      private int m_MovementSpeedBonus;
       private float m_MaxHealth = 100f;
       private Inventory m_Inventory;
       private NavMeshAgent m_NavMeshAgent;
@@ -42,6 +47,8 @@ namespace UnityProgrammerTask.Gameplay
       {
          m_Animator = GetComponent<Animator>();
          m_NavMeshAgent = GetComponent<NavMeshAgent>();
+
+         m_MovementSpeedBase = m_NavMeshAgent.speed;
       }
 
       private void Update()
@@ -81,6 +88,23 @@ namespace UnityProgrammerTask.Gameplay
             return;
 
          m_NavMeshAgent.SetDestination(position);
+      }
+
+      public void AddMovementSpeedBonus(int bonus)
+      {
+         m_MovementSpeedBonus += bonus;
+         UpdateMovementSpeed();
+      }
+
+      public void RemoveMovementSpeedBonus(int bonus)
+      {
+         m_MovementSpeedBonus -= bonus;
+         UpdateMovementSpeed();
+      }
+
+      private void UpdateMovementSpeed()
+      {
+         m_NavMeshAgent.speed = m_MovementSpeedBase * (1 + m_MovementSpeedBonus / 100f);
       }
    }
 }
