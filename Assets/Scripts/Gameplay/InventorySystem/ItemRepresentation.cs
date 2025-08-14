@@ -15,5 +15,16 @@ namespace UnityProgrammerTask.Gameplay
          m_Item = item;
          m_Quantity = quantity;
       }
+
+      private void OnTriggerEnter(Collider other)
+      {
+         if (other.TryGetComponent(out Character character))
+         {
+            m_Quantity -= character.Inventory.AddItem(m_Item, m_Quantity);
+
+            if (m_Quantity == 0)
+               Destroy(gameObject);
+         }
+      }
    }
 }

@@ -79,7 +79,6 @@ namespace UnityProgrammerTask.Core
             gameObject.transform.eulerAngles = rotation;
          else
             gameObject.transform.localEulerAngles = rotation;
-
       }
 
       public void Save(GameObject gameObject, BinaryWriter stream)

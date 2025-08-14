@@ -52,7 +52,12 @@ namespace UnityProgrammerTask.Gameplay
          // Default implementation does nothing
       }
 
-      public virtual void OnItemRemovedFromInventory(Character character)
+      public virtual void OnItemRemovedFromInventory(Character character, int quantity)
+      {
+         // Default implementation does nothing
+      }
+
+      public virtual void OnItemConsumed(Character character, int quantity)
       {
          // Default implementation does nothing
       }

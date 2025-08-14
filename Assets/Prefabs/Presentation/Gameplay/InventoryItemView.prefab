@@ -192,7 +192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_IconImage: {fileID: 4189061058182015991}
   m_QuantityText: {fileID: 3796413444915167837}
-  m_Canvas: {fileID: 0}
+  m_ItemDetailsPrefab: {fileID: 247645648316005702, guid: ab23208f8795ee44387f9f15faaf4da9, type: 3}
 --- !u!222 &947363829412009900
 CanvasRenderer:
   m_ObjectHideFlags: 0

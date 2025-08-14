@@ -178,13 +178,14 @@ namespace UnityProgrammerTask.Gameplay
          if (slot.Item == null || slot.Quantity < quantity)
             return;
 
-         slot.Quantity -= Mathf.Min(quantity, slot.Quantity);
+         int removed = Mathf.Min(quantity, slot.Quantity);
+         slot.Quantity -= removed;
+
+         if (removed > 0)
+            slot.Item.OnItemRemovedFromInventory(Character, removed);
 
          if (slot.Quantity <= 0)
-         {
-            slot.Item.OnItemRemovedFromInventory(Character);
             slot.Item = null;
-         }
 
          BroadcastChanged();
       }
@@ -226,10 +227,19 @@ namespace UnityProgrammerTask.Gameplay
          if (!slot.Item.TryConsume(Character, ref slot.Quantity))
             return false;
 
+         Assert.IsFalse(slot.Quantity >= originalQuantity, "Item consumption should reduce quantity.");
+
+         int removed = originalQuantity - slot.Quantity;
+         Item removedItem = slot.Item;
+
          if (slot.Quantity == 0)
             slot.Item = null;
 
-         Assert.IsFalse(slot.Quantity >= originalQuantity, "Item consumption should reduce quantity.");
+         if (removed > 0)
+         {
+            removedItem.OnItemRemovedFromInventory(Character, slot.Quantity - originalQuantity);
+            removedItem.OnItemConsumed(Character, removed);
+         }
 
          BroadcastChanged();
          return true;

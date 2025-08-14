@@ -22,6 +22,9 @@ namespace UnityProgrammerTask.Core
       [SerializeField]
       private Item m_PoisonItem;
 
+      [SerializeField]
+      private Equipment m_Equipment;
+
       public override void OnEnter()
       {
          base.OnEnter();
@@ -50,6 +53,10 @@ namespace UnityProgrammerTask.Core
 
          character.Inventory.AddItem(m_PoisonItem, 10);
          character.Inventory.AddItem(m_HealPotionItem, 20);
+         character.Inventory.AddItem(m_Equipment, 1);
+
+         CharacterEquipment characterEquipment = character.GetComponent<CharacterEquipment>();
+         characterEquipment.EquipItem(m_Equipment);
 
          await LoadGameplayScene("GameplayUI");
       }

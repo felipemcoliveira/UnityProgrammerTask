@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityProgrammerTask.Gameplay;
 using UnityProgrammerTask.Presentation;
 
 namespace UnityProgrammerTask.Core
@@ -15,8 +16,12 @@ namespace UnityProgrammerTask.Core
          Running,
       }
 
+      [SerializeField]
+      private PlayerInput m_PlayerInputPrefab;
+
       private Awaitable m_Startup;
       private State m_State = State.WaitingStartup;
+      private PlayerInput m_PlayerInput;
       private List<Scene> m_GameplayScenes = new();
 
       protected abstract Awaitable Startup();
@@ -34,7 +39,10 @@ namespace UnityProgrammerTask.Core
                m_Startup ??= StartupInternal();
 
                if (m_Startup.IsCompleted)
+               {
+                  OnStartupComplete();
                   m_State = State.Running;
+               }
 
                return StateID;
 
@@ -57,6 +65,12 @@ namespace UnityProgrammerTask.Core
             default:
                throw new NotImplementedException($"{m_State}");
          }
+      }
+
+      protected virtual void OnStartupComplete()
+      {
+         m_PlayerInput = UnityEngine.Object.Instantiate(m_PlayerInputPrefab);
+         UnityEngine.Object.DontDestroyOnLoad(m_PlayerInput.gameObject);
       }
 
       private async Awaitable StartupInternal()
@@ -96,6 +110,9 @@ namespace UnityProgrammerTask.Core
       public override void OnExit()
       {
          SaveSystem.DisposeActiveSave();
+
+         if (m_PlayerInput != null)
+            UnityEngine.Object.Destroy(m_PlayerInput.gameObject);
 
          foreach (Scene scene in m_GameplayScenes)
          {

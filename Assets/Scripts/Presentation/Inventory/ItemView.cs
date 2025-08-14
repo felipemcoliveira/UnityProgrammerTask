@@ -12,13 +12,24 @@ namespace UnityProgrammerTask.Presentation
       public void OnItemDropped(ItemInInventory item);
    }
 
-   public class ItemView : UIBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+   public class ItemView : UIBehaviour,
+      IBeginDragHandler,
+      IDragHandler,
+      IEndDragHandler,
+      IPointerClickHandler,
+      IPointerEnterHandler,
+      IPointerExitHandler
    {
+      private static bool s_IsDragging;
+
       [SerializeField]
       private Image m_IconImage;
 
       [SerializeField]
       private TMP_Text m_QuantityText;
+
+      [SerializeField]
+      private ItemDetails m_ItemDetailsPrefab;
 
       private Canvas m_Canvas;
       private RectTransform m_RectTransform;
@@ -26,6 +37,7 @@ namespace UnityProgrammerTask.Presentation
       private Transform m_OriginalParent;
       private int m_OriginalSiblingIndex;
       private ItemInInventory m_Item;
+      private ItemDetails m_ItemDetails;
 
       private Vector2 m_InitialAnchoredPosition;
 
@@ -76,6 +88,8 @@ namespace UnityProgrammerTask.Presentation
 
          m_CanvasGroup.blocksRaycasts = false;
          m_CanvasGroup.alpha = 0.5f;
+
+         s_IsDragging = true;
       }
 
       public void OnDrag(PointerEventData eventData)
@@ -94,6 +108,8 @@ namespace UnityProgrammerTask.Presentation
 
          List<RaycastResult> results = new();
          EventSystem.current.RaycastAll(eventData, results);
+
+         s_IsDragging = false;
 
          IItemDropHandler dropHandler = null;
          for (int i = 0; i < results.Count; i++)
@@ -124,6 +140,33 @@ namespace UnityProgrammerTask.Presentation
          {
             if (m_Item.Inventory.ConsumeItem(m_Item.Position))
                Toast.Instance.ShowMessage($"Consumed one {m_Item.ItemDefinition.ItemName}.");
+         }
+      }
+
+      public void OnPointerEnter(PointerEventData eventData)
+      {
+         if (s_IsDragging)
+            return;
+
+         if (m_ItemDetails == null)
+         {
+            m_ItemDetails = Instantiate(m_ItemDetailsPrefab, m_Canvas.transform);
+            m_ItemDetails.transform.SetAsLastSibling();
+         }
+
+         Vector3[] corners = new Vector3[4];
+         m_RectTransform.GetWorldCorners(corners);
+
+         Vector3 topLeft = corners[1];
+         m_ItemDetails.Initialize(m_Item.ItemDefinition, $"Quantity: {m_Item.Quantity}", topLeft);
+      }
+
+      public void OnPointerExit(PointerEventData eventData)
+      {
+         if (m_ItemDetails != null)
+         {
+            m_ItemDetails.HideAndDestroy();
+            m_ItemDetails = null;
          }
       }
    }

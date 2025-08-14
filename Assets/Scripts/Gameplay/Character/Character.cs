@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Assertions;
 
 namespace UnityProgrammerTask.Gameplay
@@ -29,8 +30,25 @@ namespace UnityProgrammerTask.Gameplay
 
       public bool IsAlive => Health > 0;
 
+      private static readonly int k_IsAliveHash = Animator.StringToHash("IsAlive");
+      private static readonly int k_MovementSpeedHash = Animator.StringToHash("MovementSpeed");
+
       private float m_MaxHealth = 100f;
       private Inventory m_Inventory;
+      private NavMeshAgent m_NavMeshAgent;
+      private Animator m_Animator;
+
+      private void Awake()
+      {
+         m_Animator = GetComponent<Animator>();
+         m_NavMeshAgent = GetComponent<NavMeshAgent>();
+      }
+
+      private void Update()
+      {
+         m_Animator.SetFloat(k_MovementSpeedHash, m_NavMeshAgent.velocity.magnitude);
+         m_Animator.SetBool(k_IsAliveHash, IsAlive);
+      }
 
       public void TakeDamage(float damage)
       {
@@ -55,6 +73,14 @@ namespace UnityProgrammerTask.Gameplay
 
          PlayerCharacter = this;
          PlayerCharacterSet?.Invoke(this);
+      }
+
+      public void SetDestination(Vector3 position)
+      {
+         if (!IsAlive)
+            return;
+
+         m_NavMeshAgent.SetDestination(position);
       }
    }
 }
