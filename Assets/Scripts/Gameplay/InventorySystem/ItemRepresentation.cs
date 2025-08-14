@@ -1,6 +1,7 @@
 using DG.Tweening;
 using EPOOutline;
 using UnityEngine;
+using UnityProgrammerTask.Presentation;
 
 namespace UnityProgrammerTask.Gameplay
 {
@@ -12,7 +13,6 @@ namespace UnityProgrammerTask.Gameplay
       private Item m_Item;
       private int m_Quantity;
       private int m_CreatedFrame;
-
 
       private void Awake()
       {
@@ -42,6 +42,17 @@ namespace UnityProgrammerTask.Gameplay
          if (other.TryGetComponent(out Character character))
          {
             m_Quantity -= character.Inventory.AddItem(m_Item, m_Quantity);
+
+            if (m_Quantity > 0)
+            {
+               bool singleItem = m_Quantity == 1;
+
+               string message = singleItem
+                  ? $"Picked up {m_Item.ItemName}."
+                  : $"Picked up {m_Quantity}x {m_Item.ItemName}.";
+
+               Toast.Instance.ShowMessage(message);
+            }
 
             if (m_Quantity == 0)
                Destroy(gameObject);
