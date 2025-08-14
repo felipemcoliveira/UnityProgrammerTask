@@ -1,6 +1,6 @@
-using NUnit.Framework;
 using System;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace UnityProgrammerTask.Gameplay
 {
@@ -53,8 +53,6 @@ namespace UnityProgrammerTask.Gameplay
 
          PlayerCharacter = this;
          PlayerCharacterSet?.Invoke(this);
-
-         Debug.Log($"Character {name} set as player character.");
       }
    }
 }

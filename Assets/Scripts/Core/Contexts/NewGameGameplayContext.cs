@@ -28,7 +28,7 @@ namespace UnityProgrammerTask.Core
 
       protected override async Awaitable Startup()
       {
-         await SceneManager.LoadSceneAsync("FirstLevel", LoadSceneMode.Additive);
+         await LoadGameplayScene("FirstLevel");
          Scene firstLevelScene = SceneManager.GetSceneByName("FirstLevel");
 
          SceneManager.SetActiveScene(firstLevelScene);
@@ -49,7 +49,7 @@ namespace UnityProgrammerTask.Core
          character.Inventory.AddItem(new(3, 3), m_TestItem, 2);
          character.Inventory.AddItem(new(3, 4), m_TestItem, 1);
 
-         await SceneManager.LoadSceneAsync("GameplayUI", LoadSceneMode.Additive);
+         await LoadGameplayScene("GameplayUI");
       }
    }
 }

@@ -27,7 +27,7 @@ namespace UnityProgrammerTask.Presentation
       private RectTransform m_RectTransform;
       private AnimatingState m_AnimatingState = AnimatingState.None;
 
-      private void Awake()
+      private void Start()
       {
          m_RectTransform = GetComponent<RectTransform>();
          m_RectTransform.pivot = new Vector2(m_HiddenPivot, m_RectTransform.pivot.y);

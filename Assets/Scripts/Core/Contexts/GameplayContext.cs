@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,8 +17,14 @@ namespace UnityProgrammerTask.Core
 
       private Awaitable m_Startup;
       private State m_State = State.WaitingStartup;
+      private List<Scene> m_GameplayScenes = new();
 
       protected abstract Awaitable Startup();
+
+      public override void OnEnter()
+      {
+         m_State = State.WaitingStartup;
+      }
 
       public override GameContextID Update()
       {
@@ -33,6 +40,12 @@ namespace UnityProgrammerTask.Core
 
             case State.Running:
                HandleSaveGameMessage();
+
+               if (MessageQueue.TryPoll<ReturnToMainMenuMessage>())
+                  return GameContextID.MainMenu;
+
+               if (MessageQueue.TryPoll<QuitGameMessage>())
+                  return GameContextID.None;
 
                // Heres is where the game mode logic would be processed in a real game.
                // m_GameMode.Update();
@@ -84,6 +97,14 @@ namespace UnityProgrammerTask.Core
       {
          SaveSystem.DisposeActiveSave();
 
+         foreach (Scene scene in m_GameplayScenes)
+         {
+            if (scene.isLoaded)
+               SceneManager.UnloadSceneAsync(scene);
+         }
+
+         m_GameplayScenes.Clear();
+
          m_Startup = null;
       }
 
@@ -105,9 +126,15 @@ namespace UnityProgrammerTask.Core
          SaveSystem.Save(GetSaveFilePath());
       }
 
-      protected async Awaitable LoadLevel(string levelName)
+      protected async Awaitable LoadGameplayScene(string sceneName)
       {
-         await SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
+         await SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+
+         Scene scene = SceneManager.GetSceneByName(sceneName);
+         if (m_GameplayScenes.Contains(scene))
+            return;
+
+         m_GameplayScenes.Add(scene);
       }
    }
 }
