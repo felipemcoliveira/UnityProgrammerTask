@@ -24,9 +24,9 @@ namespace UnityProgrammerTask.Core
       [SerializeReference, SubclassSelector]
       private ISaveableComponentHandler[] m_SaveableComponentHandlers;
 
-      private void Awake()
+      private void Start()
       {
-         if (!SavedDynamicGameObjects.IsLoading && !m_IsSceneObject)
+         if (!m_IsSceneObject)
             m_Id = SavedDynamicGameObjects.AddSaveableGameObject(this);
          else
             SaveSystem.ActiveSave.RegisterSection(m_Id, this);

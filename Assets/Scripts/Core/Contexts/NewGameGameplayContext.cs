@@ -16,6 +16,9 @@ namespace UnityProgrammerTask.Core
       [SerializeField]
       private AssetReferenceGameObject m_CharacterPrefabAssetReference;
 
+      [SerializeField]
+      private Item m_TestItem;
+
       public override void OnEnter()
       {
          base.OnEnter();
@@ -25,8 +28,6 @@ namespace UnityProgrammerTask.Core
 
       protected override async Awaitable Startup()
       {
-         AsyncOperation uiSceneLoadOp = SceneManager.LoadSceneAsync("GameplayUI", LoadSceneMode.Additive);
-
          await SceneManager.LoadSceneAsync("FirstLevel", LoadSceneMode.Additive);
          Scene firstLevelScene = SceneManager.GetSceneByName("FirstLevel");
 
@@ -42,7 +43,13 @@ namespace UnityProgrammerTask.Core
             return;
          }
 
-         await uiSceneLoadOp;
+         character.SetAsPlayerCharacter();
+
+         character.Inventory.AddItem(m_TestItem, 2);
+         character.Inventory.AddItem(new(3, 3), m_TestItem, 2);
+         character.Inventory.AddItem(new(3, 4), m_TestItem, 1);
+
+         await SceneManager.LoadSceneAsync("GameplayUI", LoadSceneMode.Additive);
       }
    }
 }

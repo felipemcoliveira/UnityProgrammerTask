@@ -227,7 +227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03fb6629959c4644386d36ff1d1e94ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InitialGameContext: 1
+  m_InitialGameContext: 3
   m_GameContexts:
   - rid: 7631415829729378577
   - rid: 7631415846620102725
@@ -250,6 +250,7 @@ MonoBehaviour:
           m_SubObjectGUID: 
           m_SubObjectType: 
           m_EditorAssetChanged: 0
+        m_TestItem: {fileID: 11400000, guid: a0ecc4b14055b7a4083fe9881d088d4b, type: 2}
 --- !u!4 &955668864
 Transform:
   m_ObjectHideFlags: 0

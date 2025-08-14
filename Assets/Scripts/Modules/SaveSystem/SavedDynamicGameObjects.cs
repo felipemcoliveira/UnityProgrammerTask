@@ -18,6 +18,9 @@ namespace UnityProgrammerTask.Core
 
       public static GUID AddSaveableGameObject(SaveableGameObject saveable)
       {
+         if (s_SaveableGameObjectGUIDs.TryGetValue(saveable, out GUID existingId))
+            return existingId;
+
          Assert.IsNotNull(saveable, "SaveableGameObject cannot be null.");
 
          GUID id = GUID.Generate();
@@ -68,6 +71,9 @@ namespace UnityProgrammerTask.Core
             int addressableIndex = stream.ReadInt32();
             int sceneBuildIndex = stream.ReadInt16();
 
+            if (addressableIndex == -1)
+               continue;
+
             string addressableName = addressablesTable[addressableIndex];
 
             GameObject go = Addressables.InstantiateAsync(addressableName).WaitForCompletion();
@@ -79,10 +85,10 @@ namespace UnityProgrammerTask.Core
 
             s_SaveableGameObjects.Add(saveGameObjectSectionId, saveable);
             s_SaveableGameObjectGUIDs.Add(saveable, saveGameObjectSectionId);
-
-            SaveSystem.ActiveSave.RegisterSection(saveGameObjectSectionId, saveable);
          }
 
+         foreach ((GUID id, SaveableGameObject saveable) in s_SaveableGameObjects)
+            SaveSystem.ActiveSave.RegisterSection(id, saveable);
 
          IsLoading = false;
       }
@@ -122,9 +128,6 @@ namespace UnityProgrammerTask.Core
          foreach (GUID guid in saveableIds)
          {
             SaveableGameObject saveable = s_SaveableGameObjects[guid];
-
-            if (saveable == null)
-               continue;
 
             int addressableIndex = addressablesTable.IndexOf(saveable.AddressableName);
             int sceneBuildIndex = saveable.gameObject.scene.buildIndex;
