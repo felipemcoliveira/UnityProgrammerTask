@@ -118,7 +118,7 @@ namespace UnityProgrammerTask.Presentation
          if (Character.PlayerCharacter == null)
             return;
 
-         m_PanelVisibility.ToggleVisiblity();
+         m_PanelVisibility.ToggleVisibility();
       }
 
       public void OnItemDropped(ItemInInventory item)

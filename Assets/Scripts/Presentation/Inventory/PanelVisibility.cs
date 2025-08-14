@@ -36,7 +36,7 @@ namespace UnityProgrammerTask.Presentation
          gameObject.SetActive(false);
       }
 
-      public void ToggleVisiblity()
+      public void ToggleVisibility()
       {
          if (m_AnimatingState != AnimatingState.None)
             return;
