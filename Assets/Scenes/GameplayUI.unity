@@ -2526,7 +2526,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "To collect items, simply walk your <b><color=#A9A9A9>character</color></b>
+  m_text: "Use the <b><color=#A9A9A9>Left Mouse Button</color></b> to move your <b><color=#A9A9A9>character</color></b>. 
+    \r\nTo collect items, simply walk your <b><color=#A9A9A9>character</color></b>
     over them.  \r\nPress <b><color=#A9A9A9>W</color></b> to open the <b><color=#A9A9A9>Inventory</color></b>
     panel.  \r\nPress <b><color=#A9A9A9>Q</color></b> to open the <b><color=#A9A9A9>Equipment</color></b>
     panel.  \r\nPress <b><color=#A9A9A9>ESC</color></b> to open the <b><color=#A9A9A9>In-Game
