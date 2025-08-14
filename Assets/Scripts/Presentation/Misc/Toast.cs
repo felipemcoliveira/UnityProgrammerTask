@@ -21,6 +21,7 @@ namespace UnityProgrammerTask.Presentation
             Debug.LogError("ToastMessage prefab is not assigned.");
             return;
          }
+
          ToastMessage toastMessage = Instantiate(m_ToastMessagePrefab, transform);
          toastMessage.Initialize(message);
       }

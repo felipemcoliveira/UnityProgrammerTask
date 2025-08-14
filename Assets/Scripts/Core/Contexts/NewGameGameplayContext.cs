@@ -17,7 +17,10 @@ namespace UnityProgrammerTask.Core
       private AssetReferenceGameObject m_CharacterPrefabAssetReference;
 
       [SerializeField]
-      private Item m_TestItem;
+      private Item m_HealPotionItem;
+
+      [SerializeField]
+      private Item m_PoisonItem;
 
       public override void OnEnter()
       {
@@ -45,9 +48,8 @@ namespace UnityProgrammerTask.Core
 
          character.SetAsPlayerCharacter();
 
-         character.Inventory.AddItem(m_TestItem, 2);
-         character.Inventory.AddItem(new(3, 3), m_TestItem, 2);
-         character.Inventory.AddItem(new(3, 4), m_TestItem, 1);
+         character.Inventory.AddItem(m_PoisonItem, 10);
+         character.Inventory.AddItem(m_HealPotionItem, 20);
 
          await LoadGameplayScene("GameplayUI");
       }

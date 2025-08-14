@@ -25,6 +25,8 @@ namespace UnityProgrammerTask.Gameplay
 
       private float Health { get; set; } = 100f;
 
+      public bool IsMaxHealth => Health >= m_MaxHealth;
+
       public bool IsAlive => Health > 0;
 
       private float m_MaxHealth = 100f;

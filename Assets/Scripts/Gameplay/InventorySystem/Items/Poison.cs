@@ -2,17 +2,20 @@ using UnityEngine;
 
 namespace UnityProgrammerTask.Gameplay
 {
-   [CreateAssetMenu(fileName = "HealingPotion", menuName = "Game/Items/Healing Potion")]
-   public class HealingPotion : Item
+   [CreateAssetMenu(fileName = "Poison", menuName = "Game/Items/Poison")]
+   public class Poison : Item
    {
       public override bool IsConsumable => true;
 
       [SerializeField]
-      private int m_HealAmount = 10;
+      private int m_DamageAmount = 10;
 
       public override bool TryConsume(Character character, ref int quantity)
       {
-         character.Heal(m_HealAmount);
+         if (!character.IsAlive)
+            return false;
+
+         character.TakeDamage(m_DamageAmount);
          quantity--;
 
          return true;
@@ -21,7 +24,7 @@ namespace UnityProgrammerTask.Gameplay
       public override string GetDescription()
       {
          string staticDescription = GetStaticDescription();
-         return string.Format(staticDescription, m_HealAmount);
+         return string.Format(staticDescription, m_DamageAmount);
       }
    }
 }
