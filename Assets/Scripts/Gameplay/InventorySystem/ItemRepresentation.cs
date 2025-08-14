@@ -11,10 +11,13 @@ namespace UnityProgrammerTask.Gameplay
 
       private Item m_Item;
       private int m_Quantity;
+      private int m_CreatedFrame;
 
 
       private void Awake()
       {
+         m_CreatedFrame = Time.frameCount;
+
          Outlinable outlinable = GetComponent<Outlinable>();
 
          Color originalColor = outlinable.OutlineParameters.Color;
@@ -33,6 +36,9 @@ namespace UnityProgrammerTask.Gameplay
 
       private void OnTriggerEnter(Collider other)
       {
+         if (Time.frameCount - m_CreatedFrame < 5)
+            return; // Ignore collisions in the first five frames to avoid immediate pickup
+
          if (other.TryGetComponent(out Character character))
          {
             m_Quantity -= character.Inventory.AddItem(m_Item, m_Quantity);

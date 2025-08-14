@@ -56,7 +56,7 @@ namespace UnityProgrammerTask.Core
          character.Inventory.AddItem(m_Equipment, 1);
 
          CharacterEquipment characterEquipment = character.GetComponent<CharacterEquipment>();
-         characterEquipment.EquipItem(m_Equipment);
+         characterEquipment.Equip(m_Equipment);
 
          await LoadGameplayScene("GameplayUI");
       }

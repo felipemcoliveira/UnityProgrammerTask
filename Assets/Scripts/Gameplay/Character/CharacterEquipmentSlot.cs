@@ -5,6 +5,7 @@ namespace UnityProgrammerTask.Gameplay
       Head,
       Chest,
       Feet,
-      Weapon
+      Weapon,
+      Shield,
    }
 }

@@ -82,8 +82,8 @@ namespace UnityProgrammerTask.Presentation
 
             ItemView itemView = Instantiate(m_ItemViewPrefab, itemSlot.transform);
 
-            itemView.SetCanvas(m_Canvas);
             itemView.Initialize(item);
+            itemView.SetCanvas(m_Canvas);
 
             m_ItemViews.Add(itemView);
          }
@@ -124,6 +124,11 @@ namespace UnityProgrammerTask.Presentation
       public void OnItemDropped(ItemInInventory item)
       {
          // When the user drops an item over the inventory, no action is taken.
+      }
+
+      public void OnItemDropped(EquippedItem equippedItem)
+      {
+         equippedItem.CharacterEquipment.Unequip(equippedItem.Item, ReturningPolicy.ReturnToInventory);
       }
    }
 }

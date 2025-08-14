@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5676056936858241571}
+  - component: {fileID: -4839993880739109393}
   - component: {fileID: 4755074352555709537}
   - component: {fileID: 5024468059723708242}
-  - component: {fileID: -4839993880739109393}
   m_Layer: 5
   m_Name: InventorySlot
   m_TagString: Untagged
@@ -38,6 +38,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &-4839993880739109393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6783328474512156093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5d5423166006c1449b4669d120272be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!222 &4755074352555709537
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -76,15 +88,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &-4839993880739109393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6783328474512156093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5d5423166006c1449b4669d120272be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

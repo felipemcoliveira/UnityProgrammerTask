@@ -34,5 +34,10 @@ namespace UnityProgrammerTask.Presentation
 
          m_Inventory.SwapItems(item.Position, m_Position);
       }
+
+      public void OnItemDropped(EquippedItem item)
+      {
+         item.CharacterEquipment.Unequip(item.Item, ReturningPolicy.ReturnToInventory);
+      }
    }
 }

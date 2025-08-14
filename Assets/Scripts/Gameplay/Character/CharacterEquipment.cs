@@ -6,10 +6,18 @@ using UnityEngine.Assertions;
 
 namespace UnityProgrammerTask.Gameplay
 {
+   public enum ReturningPolicy
+   {
+      None,
+      ReturnToInventory,
+      ReturnToInventoryOrDrop,
+      Drop
+   }
+
    [RequireComponent(typeof(Character))]
    public class CharacterEquipment : MonoBehaviour, IEnumerable<Equipment>
    {
-      public Action EquipmentChanged;
+      public Action<CharacterEquipment> EquipmentChanged;
 
       private Dictionary<CharacterEquipmentSlot, Equipment> m_EquipmentSlots = new();
       private Character m_Character;
@@ -19,33 +27,77 @@ namespace UnityProgrammerTask.Gameplay
          m_Character = GetComponent<Character>();
       }
 
-      public void EquipItem(Equipment equipment)
+      public bool IsSlotEquipped(CharacterEquipmentSlot slot)
+      {
+         return m_EquipmentSlots.ContainsKey(slot);
+      }
+
+      public bool TryGetEquippedItem(CharacterEquipmentSlot slot, out Equipment equipment)
+      {
+         return m_EquipmentSlots.TryGetValue(slot, out equipment);
+      }
+
+      public bool EquipItem(ItemInInventory item)
+      {
+         if (item.ItemDefinition is not Equipment equipmentItem)
+            return false;
+
+         item.Inventory.RemoveItem(item.Position, 1);
+         return Equip(equipmentItem, ReturningPolicy.ReturnToInventoryOrDrop);
+      }
+
+      public bool Equip(Equipment equipment, ReturningPolicy previousReturningPolicy = ReturningPolicy.ReturnToInventory)
       {
          if (m_EquipmentSlots.TryGetValue(equipment.Slot, out Equipment existingEquipment))
-            UnequipItem(existingEquipment);
+            Unequip(existingEquipment, previousReturningPolicy);
+
+         if (IsSlotEquipped(equipment.Slot))
+         {
+            // Failed to unequip existing equipment, cannot equip new one.
+            return false;
+         }
 
          Assert.IsNotNull(equipment, "Equipment cannot be null.");
          m_EquipmentSlots[equipment.Slot] = equipment;
 
          equipment.ApplyEffects(m_Character);
-         EquipmentChanged?.Invoke();
+         EquipmentChanged?.Invoke(this);
+
+         return true;
       }
 
-      public void UnequipItem(Equipment equipment)
+      public bool Unequip(Equipment equipment, ReturningPolicy returningPolicy, Vector3? dropWorldPosition = default)
       {
          Assert.IsNotNull(equipment, "Equipment cannot be null.");
-         Assert.IsTrue(m_EquipmentSlots.ContainsKey(equipment.Slot), "Equipment is not equipped in the specified slot.");
 
-         m_EquipmentSlots[equipment.Slot].RemoveEffects(m_Character);
+         if (!TryGetEquippedItem(equipment.Slot, out Equipment equipped))
+            return false;
+
+         equipped.RemoveEffects(m_Character);
          m_EquipmentSlots.Remove(equipment.Slot);
+         EquipmentChanged?.Invoke(this);
 
-         EquipmentChanged?.Invoke();
+         switch (returningPolicy)
+         {
+            case ReturningPolicy.None:
+               return true;
 
-         Inventory inventory = m_Character.Inventory;
-         if (inventory.AddItem(equipment, 1) == 1)
-            return;
+            case ReturningPolicy.ReturnToInventory:
+               return m_Character.Inventory.AddItem(equipment, 1) == 1;
 
-         equipment.CreateWorldRepresentation(transform.position, 1);
+            case ReturningPolicy.ReturnToInventoryOrDrop:
+               if (m_Character.Inventory.AddItem(equipment, 1) == 1)
+                  return true;
+               equipment.CreateWorldRepresentation(dropWorldPosition ?? transform.position, 1);
+               return true;
+
+            case ReturningPolicy.Drop:
+               equipment.CreateWorldRepresentation(dropWorldPosition ?? transform.position, 1);
+               return true;
+
+            default:
+               throw new NotImplementedException($"UnequipPolicy {returningPolicy} is not implemented.");
+         }
       }
 
       public IEnumerator<Equipment> GetEnumerator()
@@ -64,7 +116,7 @@ namespace UnityProgrammerTask.Gameplay
       {
          List<Equipment> equipmentList = new(m_EquipmentSlots.Values);
          foreach (Equipment equipment in equipmentList)
-            UnequipItem(equipment);
+            Unequip(equipment, ReturningPolicy.ReturnToInventoryOrDrop);
       }
    }
 }

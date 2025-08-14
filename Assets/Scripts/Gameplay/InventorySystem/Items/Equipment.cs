@@ -61,6 +61,18 @@ namespace UnityProgrammerTask.Gameplay
       }
    }
 
+   public struct EquippedItem
+   {
+      public Equipment Item { get; }
+      public CharacterEquipment CharacterEquipment { get; }
+
+      public EquippedItem(Equipment item, CharacterEquipment characterEquipment)
+      {
+         Item = item;
+         CharacterEquipment = characterEquipment;
+      }
+   }
+
    [CreateAssetMenu(fileName = "Equipment", menuName = "Game/Items/Equipment")]
    public class Equipment : Item, IEnumerable<IEquipmentEffect>
    {
@@ -95,7 +107,7 @@ namespace UnityProgrammerTask.Gameplay
       public override void OnItemConsumed(Character character, int quantity)
       {
          CharacterEquipment characterEquipment = character.GetComponent<CharacterEquipment>();
-         characterEquipment.EquipItem(this);
+         characterEquipment.Equip(this);
       }
 
       public override string GetDescription()

@@ -21,7 +21,7 @@ namespace UnityProgrammerTask.Core
             GUID itemId = GUID.Read(stream);
             Item item = ItemLibrary.Instance.GetItemByID(itemId);
             if (item is Equipment equipment)
-               characterEquipment.EquipItem(equipment);
+               characterEquipment.Equip(equipment);
          }
       }
       public void Save(GameObject gameObject, BinaryWriter stream)

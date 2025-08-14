@@ -23,8 +23,7 @@ namespace UnityProgrammerTask.Gameplay
 
       public void Drop(Vector3 placeWorldPosition)
       {
-         Inventory.RemoveItem(Position, Quantity);
-         ItemDefinition.CreateWorldRepresentation(placeWorldPosition, Quantity);
+         Inventory.DropItem(Position, Quantity, placeWorldPosition);
       }
    }
 
@@ -81,6 +80,12 @@ namespace UnityProgrammerTask.Gameplay
 
             return quantity - remaining;
          }
+      }
+
+      public bool HasEmptySlot()
+      {
+         Vector2Int emptySlotPosition = GetEmptySlotPosition();
+         return IsValidSlotPosition(emptySlotPosition);
       }
 
       public bool TryCombineItems(Vector2Int from, Vector2Int to)
@@ -170,13 +175,27 @@ namespace UnityProgrammerTask.Gameplay
          return toAdd;
       }
 
-      public void RemoveItem(Vector2Int position, int quantity)
+      public void DropItem(Vector2Int position, int quantity, Vector3 placeWorldPosition)
+      {
+         ValidateSlotPosition(position);
+
+         ref Slot slot = ref m_Slots[position.x, position.y];
+         Item item = slot.Item;
+
+         int dropped = RemoveItem(position, quantity);
+         if (dropped <= 0)
+            return;
+
+         item.CreateWorldRepresentation(placeWorldPosition, dropped);
+      }
+
+      public int RemoveItem(Vector2Int position, int quantity)
       {
          ValidateSlotPosition(position);
 
          ref Slot slot = ref m_Slots[position.x, position.y];
          if (slot.Item == null || slot.Quantity < quantity)
-            return;
+            return 0;
 
          int removed = Mathf.Min(quantity, slot.Quantity);
          slot.Quantity -= removed;
@@ -188,6 +207,8 @@ namespace UnityProgrammerTask.Gameplay
             slot.Item = null;
 
          BroadcastChanged();
+
+         return removed;
       }
 
       public bool GetFirstStackableSlotFor(Item item, Vector2Int from, out Vector2Int position)

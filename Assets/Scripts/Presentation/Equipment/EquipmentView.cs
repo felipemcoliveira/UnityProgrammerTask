@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,13 +6,7 @@ using UnityProgrammerTask.Gameplay;
 
 namespace UnityProgrammerTask.Presentation
 {
-   public interface IItemDropHandler
-   {
-      public void OnItemDropped(ItemInInventory item);
-      public void OnItemDropped(EquippedItem item);
-   }
-
-   public class ItemView : UIBehaviour,
+   public class EquipmentView : UIBehaviour,
       IBeginDragHandler,
       IDragHandler,
       IEndDragHandler,
@@ -27,9 +20,6 @@ namespace UnityProgrammerTask.Presentation
       private Image m_IconImage;
 
       [SerializeField]
-      private TMP_Text m_QuantityText;
-
-      [SerializeField]
       private ItemDetails m_ItemDetailsPrefab;
 
       private Canvas m_Canvas;
@@ -37,8 +27,9 @@ namespace UnityProgrammerTask.Presentation
       private CanvasGroup m_CanvasGroup;
       private Transform m_OriginalParent;
       private int m_OriginalSiblingIndex;
-      private ItemInInventory m_Item;
       private ItemDetails m_ItemDetails;
+      private Equipment m_Equipment;
+      private CharacterEquipment m_CharacterEquipment;
 
       private Vector2 m_InitialAnchoredPosition;
 
@@ -68,18 +59,12 @@ namespace UnityProgrammerTask.Presentation
          m_Canvas = canvas;
       }
 
-      public void Initialize(ItemInInventory item)
+      public void Initialize(CharacterEquipment characterEquipment, Equipment equipment)
       {
-         m_Item = item;
+         m_CharacterEquipment = characterEquipment;
+         m_Equipment = equipment;
 
-         bool canStack = item.ItemDefinition.MaxStackSize > 1;
-
-         m_QuantityText.gameObject.SetActive(canStack);
-
-         if (canStack)
-            m_QuantityText.SetText("{0}", item.Quantity);
-
-         m_IconImage.sprite = item.ItemDefinition.ItemIcon;
+         m_IconImage.sprite = equipment.ItemIcon;
       }
 
       public void OnBeginDrag(PointerEventData eventData)
@@ -137,21 +122,18 @@ namespace UnityProgrammerTask.Presentation
             int layerMask = LayerMask.GetMask("Environment");
 
             if (Physics.Raycast(raycast, out RaycastHit hit, Mathf.Infinity, layerMask))
-               m_Item.Drop(hit.point);
+               m_CharacterEquipment.Unequip(m_Equipment, ReturningPolicy.Drop, hit.point);
 
             return;
          }
 
-         dropHandler?.OnItemDropped(m_Item);
+         dropHandler?.OnItemDropped(new EquippedItem(m_Equipment, m_CharacterEquipment));
       }
 
       public void OnPointerClick(PointerEventData eventData)
       {
          if (eventData.button == PointerEventData.InputButton.Left && eventData.clickCount == 2)
-         {
-            if (m_Item.Inventory.ConsumeItem(m_Item.Position))
-               Toast.Instance.ShowMessage($"Consumed one {m_Item.ItemDefinition.ItemName}.");
-         }
+            m_CharacterEquipment.Unequip(m_Equipment, ReturningPolicy.ReturnToInventory);
       }
 
       public void OnPointerEnter(PointerEventData eventData)
@@ -169,7 +151,7 @@ namespace UnityProgrammerTask.Presentation
          m_RectTransform.GetWorldCorners(corners);
 
          Vector3 topLeft = corners[1];
-         m_ItemDetails.Initialize(m_Item.ItemDefinition, $"Quantity: {m_Item.Quantity}", topLeft);
+         m_ItemDetails.Initialize(m_Equipment, $"Equipped", topLeft);
       }
 
       public void OnPointerExit(PointerEventData eventData)
