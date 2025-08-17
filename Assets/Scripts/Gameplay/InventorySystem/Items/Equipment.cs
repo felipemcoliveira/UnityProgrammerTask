@@ -15,23 +15,6 @@ namespace UnityProgrammerTask.Gameplay
    }
 
    [Serializable]
-   public class LogOnlyEffect : IEquipmentEffect
-   {
-      [SerializeField]
-      private string m_Message;
-
-      public void ApplyEffect(Character character)
-      {
-         Debug.Log($"Applying effect: {m_Message}");
-      }
-
-      public void RemoveEffect(Character character)
-      {
-         Debug.Log($"Removing effect: {m_Message}");
-      }
-   }
-
-   [Serializable]
    public class MovementSpeedEffect : IEquipmentEffect
    {
       [SerializeField]
