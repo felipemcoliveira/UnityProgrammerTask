@@ -37,6 +37,12 @@ namespace UnityProgrammerTask
          m_Low = BitConverter.ToInt64(bytes.Slice(8, 8));
       }
 
+      public GUID(long high, long low)
+      {
+         m_High = high;
+         m_Low = low;
+      }
+
       public static GUID Generate()
       {
          return new GUID(Guid.NewGuid());
