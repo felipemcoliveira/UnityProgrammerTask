@@ -17,9 +17,23 @@ namespace UnityProgrammerTask.Gameplay
    [RequireComponent(typeof(Character))]
    public class CharacterEquipment : MonoBehaviour, IEnumerable<Equipment>
    {
+      public class EquipmentData
+      {
+         public Equipment Equipment { get; }
+         public List<IEquipmentEffect> AppliedEffects { get; }
+
+         public EquipmentData(Equipment equipment, List<IEquipmentEffect> appliedEffects)
+         {
+            Equipment = equipment;
+            AppliedEffects = appliedEffects;
+         }
+      }
+
+      public Character Character => m_Character;
+
       public Action<CharacterEquipment> EquipmentChanged;
 
-      private Dictionary<CharacterEquipmentSlot, Equipment> m_EquipmentSlots = new();
+      private Dictionary<CharacterEquipmentSlot, EquipmentData> m_Equipments = new();
       private Character m_Character;
 
       private void Awake()
@@ -27,14 +41,21 @@ namespace UnityProgrammerTask.Gameplay
          m_Character = GetComponent<Character>();
       }
 
-      public bool IsSlotEquipped(CharacterEquipmentSlot slot)
+      public bool HasEquipment(CharacterEquipmentSlot slot)
       {
-         return m_EquipmentSlots.ContainsKey(slot);
+         return m_Equipments.ContainsKey(slot);
       }
 
       public bool TryGetEquippedItem(CharacterEquipmentSlot slot, out Equipment equipment)
       {
-         return m_EquipmentSlots.TryGetValue(slot, out equipment);
+         if (m_Equipments.TryGetValue(slot, out EquipmentData equipmentData))
+         {
+            equipment = equipmentData.Equipment;
+            return true;
+         }
+
+         equipment = null;
+         return false;
       }
 
       public bool EquipItem(ItemInInventory item)
@@ -48,34 +69,40 @@ namespace UnityProgrammerTask.Gameplay
 
       public bool Equip(Equipment equipment, ReturningPolicy previousReturningPolicy = ReturningPolicy.ReturnToInventory)
       {
-         if (m_EquipmentSlots.TryGetValue(equipment.Slot, out Equipment existingEquipment))
-            Unequip(existingEquipment, previousReturningPolicy);
+         Assert.IsNotNull(equipment, "Equipment cannot be null.");
 
-         if (IsSlotEquipped(equipment.Slot))
+         if (m_Equipments.TryGetValue(equipment.Slot, out EquipmentData existingEquipmentData))
+            Unequip(existingEquipmentData.Equipment.Slot, previousReturningPolicy);
+
+         if (HasEquipment(equipment.Slot))
          {
             // Failed to unequip existing equipment, cannot equip new one.
             return false;
          }
 
-         Assert.IsNotNull(equipment, "Equipment cannot be null.");
-         m_EquipmentSlots[equipment.Slot] = equipment;
+         EquipmentData equipmentData = new(equipment, equipment.CreateEffects());
+         m_Equipments.Add(equipment.Slot, equipmentData);
 
-         equipment.ApplyEffects(m_Character);
+         foreach (IEquipmentEffect effect in equipmentData.AppliedEffects)
+            effect.ApplyEffect(m_Character);
+
          EquipmentChanged?.Invoke(this);
 
          return true;
       }
 
-      public bool Unequip(Equipment equipment, ReturningPolicy returningPolicy, Vector3? dropWorldPosition = default)
+      public bool Unequip(CharacterEquipmentSlot slot, ReturningPolicy returningPolicy, Vector3? dropWorldPosition = default)
       {
-         Assert.IsNotNull(equipment, "Equipment cannot be null.");
-
-         if (!TryGetEquippedItem(equipment.Slot, out Equipment equipped))
+         if (!m_Equipments.TryGetValue(slot, out EquipmentData equippedData))
             return false;
 
-         equipped.RemoveEffects(m_Character);
-         m_EquipmentSlots.Remove(equipment.Slot);
+         foreach (IEquipmentEffect effect in equippedData.AppliedEffects)
+            effect.RemoveEffect(m_Character);
+
+         m_Equipments.Remove(slot);
          EquipmentChanged?.Invoke(this);
+
+         Item item = equippedData.Equipment;
 
          switch (returningPolicy)
          {
@@ -83,16 +110,16 @@ namespace UnityProgrammerTask.Gameplay
                return true;
 
             case ReturningPolicy.ReturnToInventory:
-               return m_Character.Inventory.AddItem(equipment, 1) == 1;
+               return m_Character.Inventory.AddItem(item, 1) == 1;
 
             case ReturningPolicy.ReturnToInventoryOrDrop:
-               if (m_Character.Inventory.AddItem(equipment, 1) == 1)
+               if (m_Character.Inventory.AddItem(item, 1) == 1)
                   return true;
-               equipment.CreateWorldRepresentation(dropWorldPosition ?? transform.position, 1);
+               item.CreateWorldRepresentation(dropWorldPosition ?? transform.position, 1);
                return true;
 
             case ReturningPolicy.Drop:
-               equipment.CreateWorldRepresentation(dropWorldPosition ?? transform.position, 1);
+               item.CreateWorldRepresentation(dropWorldPosition ?? transform.position, 1);
                return true;
 
             default:
@@ -102,21 +129,13 @@ namespace UnityProgrammerTask.Gameplay
 
       public IEnumerator<Equipment> GetEnumerator()
       {
-         foreach (Equipment equipment in m_EquipmentSlots.Values)
-            yield return equipment;
+         foreach (EquipmentData equipmentData in m_Equipments.Values)
+            yield return equipmentData.Equipment;
       }
 
       IEnumerator IEnumerable.GetEnumerator()
       {
          return GetEnumerator();
-      }
-
-      [ContextMenu("Unequip All")]
-      private void UnequipAllContexMenu()
-      {
-         List<Equipment> equipmentList = new(m_EquipmentSlots.Values);
-         foreach (Equipment equipment in equipmentList)
-            Unequip(equipment, ReturningPolicy.ReturnToInventoryOrDrop);
       }
    }
 }

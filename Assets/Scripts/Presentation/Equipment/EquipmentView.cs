@@ -122,7 +122,7 @@ namespace UnityProgrammerTask.Presentation
             int layerMask = LayerMask.GetMask("Environment");
 
             if (Physics.Raycast(raycast, out RaycastHit hit, Mathf.Infinity, layerMask))
-               m_CharacterEquipment.Unequip(m_Equipment, ReturningPolicy.Drop, hit.point);
+               m_CharacterEquipment.Unequip(m_Equipment.Slot, ReturningPolicy.Drop, hit.point);
 
             return;
          }
@@ -133,7 +133,7 @@ namespace UnityProgrammerTask.Presentation
       public void OnPointerClick(PointerEventData eventData)
       {
          if (eventData.button == PointerEventData.InputButton.Left && eventData.clickCount == 2)
-            m_CharacterEquipment.Unequip(m_Equipment, ReturningPolicy.ReturnToInventory);
+            m_CharacterEquipment.Unequip(m_Equipment.Slot, ReturningPolicy.ReturnToInventory);
       }
 
       public void OnPointerEnter(PointerEventData eventData)

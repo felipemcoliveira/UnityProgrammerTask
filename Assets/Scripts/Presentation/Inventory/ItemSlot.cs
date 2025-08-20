@@ -37,7 +37,7 @@ namespace UnityProgrammerTask.Presentation
 
       public void OnItemDropped(EquippedItem item)
       {
-         item.CharacterEquipment.Unequip(item.Item, ReturningPolicy.ReturnToInventory);
+         item.CharacterEquipment.Unequip(item.Item.Slot, ReturningPolicy.ReturnToInventory);
       }
    }
 }

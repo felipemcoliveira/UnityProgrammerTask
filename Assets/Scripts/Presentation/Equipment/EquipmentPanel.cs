@@ -117,7 +117,7 @@ namespace UnityProgrammerTask.Presentation
          if (item.ItemDefinition is not Equipment equipment)
             return;
 
-         m_CharacterEquipment.Unequip(equipment, ReturningPolicy.ReturnToInventory);
+         m_CharacterEquipment.Unequip(equipment.Slot, ReturningPolicy.ReturnToInventory);
       }
 
       public void OnItemDropped(EquippedItem item)

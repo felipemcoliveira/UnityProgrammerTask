@@ -24,6 +24,19 @@ namespace UnityProgrammerTask.Gameplay
          }
       }
 
+      public CharacterStatCollection Stats
+      {
+         get
+         {
+            if (m_Stats == null)
+               m_Stats = GetComponent<CharacterStatCollection>();
+
+            return m_Stats;
+         }
+      }
+
+      public bool IsPlayerCharacter => PlayerCharacter == this;
+
       public float Health { get; private set; } = 100f;
 
       public bool IsMaxHealth => Health >= m_MaxHealth;
@@ -40,6 +53,7 @@ namespace UnityProgrammerTask.Gameplay
       private int m_MovementSpeedBonus;
       private float m_MaxHealth = 100f;
       private Inventory m_Inventory;
+      private CharacterStatCollection m_Stats;
       private NavMeshAgent m_NavMeshAgent;
       private Animator m_Animator;
 
@@ -47,8 +61,18 @@ namespace UnityProgrammerTask.Gameplay
       {
          m_Animator = GetComponent<Animator>();
          m_NavMeshAgent = GetComponent<NavMeshAgent>();
+         m_Stats = GetComponent<CharacterStatCollection>();
+
+         CharacterStat movementSpeedStat = m_Stats.GetOrCreateStat(CharacterStatID.MovementSpeed);
 
          m_MovementSpeedBase = m_NavMeshAgent.speed;
+         movementSpeedStat.BaseValue = m_MovementSpeedBase;
+         m_NavMeshAgent.speed = movementSpeedStat.CurrentValue;
+
+         movementSpeedStat.StatChanged += (stat) =>
+         {
+            m_NavMeshAgent.speed = movementSpeedStat.CurrentValue;
+         };
       }
 
       private void Update()

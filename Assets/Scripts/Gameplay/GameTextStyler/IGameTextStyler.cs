@@ -4,5 +4,6 @@ namespace UnityProgrammerTask.Gameplay
    {
       public string Positive(string text);
       public string Negative(string text);
+      public string Stat(CharacterStatID statID);
    }
 }

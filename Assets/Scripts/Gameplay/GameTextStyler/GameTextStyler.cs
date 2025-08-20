@@ -1,15 +1,23 @@
 namespace UnityProgrammerTask.Gameplay
 {
-   public class GameTextStyler : IGameTextStyler
+   public class GameTextStyler : TextOnlyGameTextStyler
    {
-      public string Positive(string text)
+      public override string Positive(string text)
       {
-         return $"<color=#19fc7f>{text}</color>";
+         string innerText = base.Positive(text);
+         if (string.IsNullOrEmpty(innerText))
+            return string.Empty;
+
+         return $"<color=#19fc7f>{innerText}</color>";
       }
 
-      public string Negative(string text)
+      public override string Negative(string text)
       {
-         return $"<color=#eb4034>{text}</color>";
+         string innerText = base.Negative(text);
+         if (string.IsNullOrEmpty(innerText))
+            return string.Empty;
+
+         return $"<color=#eb4034>{innerText}</color>";
       }
    }
 }
