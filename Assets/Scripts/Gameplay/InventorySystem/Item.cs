@@ -67,7 +67,7 @@ namespace UnityProgrammerTask.Gameplay
          return true;
       }
 
-      public virtual string GetDescription()
+      public virtual string GetDescription(IGameTextStyler textStyler)
       {
          return GetStaticDescription();
       }

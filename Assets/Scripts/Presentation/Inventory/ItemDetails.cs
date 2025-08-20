@@ -31,7 +31,7 @@ namespace UnityProgrammerTask.Presentation
       {
          m_ItemNameText.text = item.ItemName;
          m_ItemIconImage.sprite = item.ItemIcon;
-         m_ItemDescriptionText.text = item.GetDescription();
+         m_ItemDescriptionText.text = item.GetDescription(GameTextStylerLibrary.DefaultStyler);
          m_SubHeadlineText.text = subHeadline;
 
          RectTransform rectTransform = (RectTransform)transform;

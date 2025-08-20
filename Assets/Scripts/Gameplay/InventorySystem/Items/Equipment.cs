@@ -11,7 +11,7 @@ namespace UnityProgrammerTask.Gameplay
       public void ApplyEffect(Character character);
       public void RemoveEffect(Character character);
 
-      public string GetDescription() => string.Empty;
+      public string GetDescription(IGameTextStyler textStyler) => string.Empty;
    }
 
    [Serializable]
@@ -30,7 +30,7 @@ namespace UnityProgrammerTask.Gameplay
          character.RemoveMovementSpeedBonus(m_BonusPercentage);
       }
 
-      public string GetDescription()
+      public string GetDescription(IGameTextStyler textStyler)
       {
          bool isPositive = m_BonusPercentage >= 0;
          int absoluteBonus = Mathf.Abs(m_BonusPercentage);
@@ -38,9 +38,9 @@ namespace UnityProgrammerTask.Gameplay
 
          string bonus = $"{sign}{absoluteBonus}% Movement Speed";
          if (!isPositive)
-            return $"<color=#eb4034>{bonus}</color>";
+            return textStyler.Negative(bonus);
 
-         return $"<color=#19fc7f>{bonus}</color>";
+         return textStyler.Positive(bonus);
       }
    }
 
@@ -93,9 +93,9 @@ namespace UnityProgrammerTask.Gameplay
          characterEquipment.Equip(this);
       }
 
-      public override string GetDescription()
+      public override string GetDescription(IGameTextStyler textStyler)
       {
-         string staticDescription = base.GetDescription();
+         string staticDescription = base.GetDescription(textStyler);
 
          StringBuilder descriptionBuilder = new(staticDescription);
 
@@ -106,7 +106,7 @@ namespace UnityProgrammerTask.Gameplay
 
             foreach (IEquipmentEffect effect in m_Effects)
             {
-               string effectDescription = effect.GetDescription();
+               string effectDescription = effect.GetDescription(textStyler);
                if (!string.IsNullOrEmpty(effectDescription))
                   descriptionBuilder.AppendLine(effectDescription);
             }

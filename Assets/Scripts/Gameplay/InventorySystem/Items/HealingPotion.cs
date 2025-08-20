@@ -21,7 +21,7 @@ namespace UnityProgrammerTask.Gameplay
          return true;
       }
 
-      public override string GetDescription()
+      public override string GetDescription(IGameTextStyler textStyler)
       {
          string staticDescription = GetStaticDescription();
          return string.Format(staticDescription, m_HealAmount);
