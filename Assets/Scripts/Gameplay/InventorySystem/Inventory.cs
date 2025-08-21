@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace UnityProgrammerTask.Gameplay
       }
    }
 
+   [HideMonoScript]
    [RequireComponent(typeof(Character))]
    public class Inventory : MonoBehaviour, IEnumerable<ItemInInventory>
    {

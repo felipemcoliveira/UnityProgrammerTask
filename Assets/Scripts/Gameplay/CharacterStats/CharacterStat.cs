@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,14 +13,24 @@ namespace UnityProgrammerTask.Gameplay
          public float Value;
       }
 
+      [HideInInspector]
       public Action<CharacterStat> StatChanged;
+
+      [HideInInspector]
       public Action<CharacterStat> StatActivated;
+
+      [HideInInspector]
       public Action<CharacterStat> StatDeactivated;
 
       public CharacterStatID ID => m_ID;
+
+      [ShowInInspector]
       public float CurrentValue => m_CurrentValue;
+
+      [ShowInInspector]
       public bool IsActive => m_IsActive;
 
+      [ShowInInspector, PropertyOrder(-1)]
       public float BaseValue
       {
          get => m_BaseValue;

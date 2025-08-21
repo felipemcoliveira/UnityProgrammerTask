@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace UnityProgrammerTask.Gameplay
       Drop
    }
 
+   [HideMonoScript]
    [RequireComponent(typeof(Character))]
    public class CharacterEquipment : MonoBehaviour, IEnumerable<Equipment>
    {

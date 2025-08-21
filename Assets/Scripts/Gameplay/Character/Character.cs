@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
 using UnityEngine.AI;
@@ -5,6 +6,7 @@ using UnityEngine.Assertions;
 
 namespace UnityProgrammerTask.Gameplay
 {
+   [HideMonoScript]
    public class Character : MonoBehaviour
    {
       public static Action<Character> PlayerCharacterSet;

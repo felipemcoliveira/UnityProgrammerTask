@@ -1,12 +1,16 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace UnityProgrammerTask.Gameplay
 {
+   [HideMonoScript]
    public class CharacterStatCollection : MonoBehaviour, IEnumerable<CharacterStat>
    {
+      [ShowInInspector, Searchable, DictionaryDrawerSettings(IsReadOnly = true)]
       private Dictionary<CharacterStatID, CharacterStat> m_Stats = new();
+
       private HashSet<CharacterStatID> m_ActiveStatIDs = new();
 
       public CharacterStat GetOrCreateStat(CharacterStatID id)
@@ -16,8 +20,8 @@ namespace UnityProgrammerTask.Gameplay
 
          CharacterStat newStat = new(id, 0f);
 
-         newStat.StatActivated += OnCharacterActiveStateChanged;
-         newStat.StatDeactivated += OnCharacterActiveStateChanged;
+         newStat.StatActivated += OnStatActiveStateChanged;
+         newStat.StatDeactivated += OnStatActiveStateChanged;
 
          m_Stats.Add(id, newStat);
 
@@ -45,7 +49,7 @@ namespace UnityProgrammerTask.Gameplay
          return false;
       }
 
-      private void OnCharacterActiveStateChanged(CharacterStat stat)
+      private void OnStatActiveStateChanged(CharacterStat stat)
       {
          if (stat.IsActive)
          {

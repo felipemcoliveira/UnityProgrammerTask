@@ -6,6 +6,7 @@ using UnityEngine.Pool;
 
 namespace UnityProgrammerTask.Core
 {
+   [HideMonoScript]
    public class SaveableGameObject : MonoBehaviour, IGameSaveSection
    {
       public GUID Id => m_Id;
@@ -13,11 +14,11 @@ namespace UnityProgrammerTask.Core
 
       private static readonly Dictionary<GUID, SaveableGameObject> s_ActiveSaveableGameObjects = new();
 
+      [SerializeField, DisplayAsString(FontSize = 10), HideIf(nameof(m_IsSceneObject))]
+      private GUID m_Id;
+
       [SerializeField]
       private string m_AddressableName;
-
-      [SerializeField, DisplayAsString, HideIf(nameof(m_IsSceneObject))]
-      private GUID m_Id;
 
       [SerializeField, HideInInspector]
       private bool m_IsSceneObject;
