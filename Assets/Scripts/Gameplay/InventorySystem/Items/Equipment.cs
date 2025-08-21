@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,17 +18,30 @@ namespace UnityProgrammerTask.Gameplay
    public class CharacterStatModifierEffect : IEquipmentEffect
    {
       [Serializable]
-      [AddTypeMenu("Character Stat Modifier")]
+      [TypeRegistryItem("Character Stat Modifier", "Equipment Effects", SdfIconType.LightningChargeFill)]
       public class Factory : IEquipmentEffectFactory
       {
+         [HorizontalGroup("Inline", Width = 140), HideLabel]
          [SerializeField]
          private CharacterStatID m_TargetStat;
 
+         [HorizontalGroup("Inline", Width = 130), HideLabel]
          [SerializeField]
          private CharacterStatModifierType m_ModifierType;
 
+         [HorizontalGroup("Inline"), HideLabel]
          [SerializeField]
          private float m_ModifierValue;
+
+         [ShowInInspector, DisplayAsString(EnableRichText = true)]
+         private string DescriptionPreview
+         {
+            get
+            {
+               IEquipmentEffect tempEffect = CreateEffect();
+               return tempEffect.GetDescription(GameTextStylerLibrary.DefaultStyler);
+            }
+         }
 
          public IEquipmentEffect CreateEffect()
          {
@@ -101,15 +115,17 @@ namespace UnityProgrammerTask.Gameplay
    public class Equipment : Item
    {
       public override bool IsConsumable => true;
-
       public CharacterEquipmentSlot Slot => m_Slot;
 
       public IEquipmentEffectFactory[] EffectFactories => m_EffectFactories;
 
+      [TitleGroup("Equipment"), EnumToggleButtons]
       [SerializeField]
       private CharacterEquipmentSlot m_Slot;
 
-      [SerializeReference, SubclassSelector]
+      [TitleGroup("Equipment"), Searchable, ListDrawerSettings(ShowFoldout = false), LabelText("Effects"), InlineProperty]
+      [PropertySpace(8, 8), PolymorphicDrawerSettings(ShowBaseType = false)]
+      [SerializeReference]
       private IEquipmentEffectFactory[] m_EffectFactories;
 
       public override bool TryConsume(Character character, ref int quantity)

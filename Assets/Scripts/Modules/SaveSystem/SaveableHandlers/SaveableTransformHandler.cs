@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,26 +14,22 @@ namespace UnityProgrammerTask.Core
       PositionX = 1 << 1,
       PositionY = 1 << 2,
       PositionZ = 1 << 3,
-
-      Position = PositionX | PositionY | PositionZ,
-
       RotationX = 1 << 4,
       RotationY = 1 << 5,
       RotationZ = 1 << 6,
-
-      Rotation = RotationX | RotationY | RotationZ,
    }
 
    [Serializable]
    public class SaveableTransformHandler : ISaveableComponentHandler
    {
-      [SerializeField]
+      [SerializeField, EnumToggleButtons, HideLabel, Title("Flags")]
       private TransformSaveFlags m_SaveFlags;
 
-      [SerializeField]
+      [SerializeField, EnumToggleButtons, HideLabel, Title("Position Space")]
       private Space m_PositionSpace = Space.World;
 
-      [SerializeField]
+      [SerializeField, EnumToggleButtons, HideLabel, Title("Rotation, Space")]
+      [PropertySpace(0, 8)]
       private Space m_RotationSpace = Space.Self;
 
       public void Load(GameObject gameObject, BinaryReader stream)

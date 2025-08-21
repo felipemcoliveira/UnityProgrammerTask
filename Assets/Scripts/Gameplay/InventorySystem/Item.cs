@@ -1,7 +1,9 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace UnityProgrammerTask.Gameplay
 {
+   [HideMonoScript]
    public class Item : ScriptableObject
    {
       public GUID ID => m_ID;
@@ -16,24 +18,34 @@ namespace UnityProgrammerTask.Gameplay
 
       public Sprite ItemIcon => m_ItemIcon;
 
+      [TitleGroup("General"), PropertyOrder(-100), DisplayAsString]
       [SerializeField]
       private GUID m_ID;
 
+      [TitleGroup("General", Alignment = TitleAlignments.Left)]
+      [VerticalGroup("General/Left"), LabelText("Name"), PropertyOrder(-50), Required]
       [SerializeField]
       private string m_ItemName;
 
+      [VerticalGroup("General/Left"), LabelText("Icon"), PreviewField(64, ObjectFieldAlignment.Left), HideLabel]
       [SerializeField]
       private Sprite m_ItemIcon;
 
+      [VerticalGroup("General/Right"), LabelText("Price"), MinValue(0), SuffixLabel("gold", true)]
       [SerializeField]
       private int m_UnitPriceInGold;
 
+      [VerticalGroup("General/Right"), LabelText("Max Stack"), MinValue(1)]
       [SerializeField]
       private int m_MaxStackSize = 1;
 
-      [SerializeField, Multiline(4)]
+      [BoxGroup("Description")]
+      [HideLabel, MultiLineProperty(3)]
+      [SerializeField]
       private string m_StaticDescription;
 
+      [TitleGroup("World Representation", Order = 1000)]
+      [AssetsOnly, Required]
       [SerializeField]
       private ItemRepresentation m_WorldRepresentationPrefab;
 

@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -15,13 +16,16 @@ namespace UnityProgrammerTask.Core
       [SerializeField]
       private string m_AddressableName;
 
-      [SerializeField, HideInInspector]
+      [SerializeField, DisplayAsString, HideIf(nameof(m_IsSceneObject))]
       private GUID m_Id;
 
       [SerializeField, HideInInspector]
       private bool m_IsSceneObject;
 
-      [SerializeReference, SubclassSelector]
+      [Searchable, ListDrawerSettings(ShowFoldout = false, DraggableItems = false), LabelText("Component Handlers")]
+      [InlineProperty, PolymorphicDrawerSettings(ShowBaseType = false)]
+      [PropertySpace(16, 8)]
+      [SerializeReference]
       private ISaveableComponentHandler[] m_SaveableComponentHandlers;
 
       private void Start()

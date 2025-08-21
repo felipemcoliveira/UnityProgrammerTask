@@ -1,15 +1,19 @@
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 
 namespace UnityProgrammerTask.Core
 {
+   [HideMonoScript]
    public class GameFlow : MonoBehaviour
    {
       [SerializeField]
       private GameContextID m_InitialGameContext;
 
-      [SerializeReference, SubclassSelector]
+      [Searchable, ListDrawerSettings(ShowFoldout = false), InlineProperty]
+      [PropertySpace(16, 16)]
+      [SerializeReference]
       private GameContext[] m_GameContexts;
 
       private StateMachine<GameContextID> m_ContextStateMachine;

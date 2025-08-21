@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace UnityProgrammerTask.Gameplay
@@ -7,6 +8,7 @@ namespace UnityProgrammerTask.Gameplay
    {
       public override bool IsConsumable => true;
 
+      [TitleGroup("Consume Effect")]
       [SerializeField]
       private int m_DamageAmount = 10;
 
