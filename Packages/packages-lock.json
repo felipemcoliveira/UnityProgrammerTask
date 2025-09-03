@@ -1,5 +1,17 @@
 {
   "dependencies": {
+    "com.bandoware.gameplayabilities": {
+      "version": "file:com.bandoware.gameplayabilities",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.bandoware.gameplaytags": {
+      "version": "file:com.bandoware.gameplaytags",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.mackysoft.serializereference-extensions": {
       "version": "https://github.com/mackysoft/Unity-SerializeReferenceExtensions.git?path=Assets/MackySoft/MackySoft.SerializeReferenceExtensions",
       "depth": 0,
